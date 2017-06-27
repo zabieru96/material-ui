@@ -6,6 +6,8 @@ export { default as Badge } from './Badge';
 
 export { default as BottomNavigation, BottomNavigationButton } from './BottomNavigation';
 
+export { default as BottomSheet } from './BottomSheet';
+
 export { default as Button } from './Button';
 
 export { default as Card, CardActions, CardContent, CardHeader, CardMedia } from './Card';
