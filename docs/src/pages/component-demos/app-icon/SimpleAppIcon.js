@@ -4,11 +4,12 @@
 
 import React, { Component } from 'react';
 import AppIcon from 'material-ui/AppIcon';
+import BookmarkIcon from 'material-ui-icons/Bookmark'
 
 class SimpleAppIcon extends Component{
   render(){
     return (
-      <AppIcon/>
+      <AppIcon icon={ <BookmarkIcon/> }/>
     )
   }
 }

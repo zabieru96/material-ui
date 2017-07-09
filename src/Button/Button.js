@@ -40,7 +40,7 @@ export const styleSheet = createStyleSheet('MuiButton', theme => ({
     fontSize: theme.typography.fontSize - 1,
   },
   label: {
-    width: '100%',
+    //width: '100%', Why is this necessary?
     display: 'inherit',
     alignItems: 'inherit',
     justifyContent: 'inherit',
