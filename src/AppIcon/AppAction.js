@@ -71,10 +71,10 @@ type Props = DefaultProps & {
 };
 
 function AppAction(props: Props) {
-  const { classes, icon, label } = props;
+  const { classes, icon, label, onClick } = props;
 
   return (
-    <div className={classNames(classes.root)}>
+    <div onClick={onClick} className={classNames(classes.root)}>
       <span className={classNames(classes.icon)}>
         {icon}
       </span>

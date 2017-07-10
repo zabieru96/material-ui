@@ -135,6 +135,7 @@ class AppIcon extends Component{
             ref={node => {
               this.actionList = node;
             }}
+            onClick={this.handleRequestClose}
           >
             {orientation[0] == 'bottom'? anchorArrow : ''}
             <div
