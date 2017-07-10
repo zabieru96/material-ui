@@ -19,7 +19,7 @@ export const styleSheet = createStyleSheet('MuiAppIcon', theme => ({
     boxShadow: 'none',
     overflow: 'visible',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column-reverse'
   },
   arrow:{
     position: 'relative',
@@ -27,23 +27,29 @@ export const styleSheet = createStyleSheet('MuiAppIcon', theme => ({
     height: 0,
     borderLeft: '3px solid transparent',
     borderRight: '3px solid transparent',
-
-    //Test Styles
-    marginLeft: 18,
-    bottom: '-5px'
   },
   arrowUp: {
-    borderBottom: '5px solid white'
+    borderBottom: '5px solid white',
+    bottom: '-5px'
   },
   arrowDown: {
-    borderTop: '5px solid white'
+    borderTop: '5px solid white',
+    top: '-5px'
+  },
+  arrowLeft: {
+    marginLeft: 18
+  },
+  arrowRight: {
+    marginRight: 18,
+    display: 'flex',
+    justifyContent: 'flex-end'
   }
 }));
 
 class AppIcon extends Component{
     static defaultProps = {
       open: false,
-      //orientation: ['bottom', 'left']
+      orientation: ['top', 'left']
     };
 
     actionList = undefined;
@@ -87,6 +93,27 @@ class AppIcon extends Component{
           anchorEl
         } = this.state;
 
+        let transform = {
+          vertical: orientation[0] == 'top'? 30: -30,
+          horizontal: orientation[1] == 'left'? 126: 0
+        };
+
+        let anchorArrow = (
+          <div className={
+            classNames({
+              [classes.arrowLeft] : orientation[1] == 'right',
+              [classes.arrowRight] : orientation[1] == 'left',
+            })
+          }>
+            <div className={classNames({
+            [classes.arrow] : true,
+            [classes.arrowDown] : orientation[0] == 'top',
+            [classes.arrowUp] : orientation[0] == 'bottom',
+          })}
+          ref="anchor"></div>
+          </div>
+        )
+
         let button =(
             <div>
               <Button fab={true} className={classNames(classes.root)} onClick={this.handleFabClick}>
@@ -95,18 +122,19 @@ class AppIcon extends Component{
             </div>
           );
 
+
+
         let content = (
           <div
             ref={node => {
               this.actionList = node;
             }}
           >
-            <div className={classNames(classes.arrow, classes.arrowUp)} ref="anchor"></div>
+            {orientation[0] == 'bottom'? anchorArrow : ''}
             {children}
+            {orientation[0] == 'top'? anchorArrow : ''}
           </div>
         );
-
-      //getContentAnchorEl={this.getContentAnchorEl}
 
       return(
           <div ref="button">
@@ -115,6 +143,7 @@ class AppIcon extends Component{
               anchorEl={anchorEl}
               getContentAnchorEl={this.getContentAnchorEl}
               anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
+              transformOrigin={transform}
               open={open}
               modal={false}
               className={classNames(classes.actionList)}
