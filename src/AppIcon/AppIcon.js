@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import {createStyleSheet} from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
 import Popover from '../internal/Popover';
+import Avatar from '../Avatar';
 import PropTypes from 'prop-types';
 import Button from '../Button'
 import { findDOMNode } from 'react-dom';
@@ -19,6 +20,10 @@ export const styleSheet = createStyleSheet('MuiAppIcon', theme => ({
     boxShadow: 'none',
     overflow: 'visible',
     display: 'flex',
+  },
+  avatar: {
+    height: 44,
+    width: 44
   },
   actionList: {
     display: 'flex',
@@ -120,10 +125,15 @@ class AppIcon extends Component{
           </div>
         )
 
+        let buttonContent = icon;
+        if(icon.type == Avatar){
+          buttonContent = React.cloneElement(icon, {className: classes.avatar});
+        }
+
         let button =(
             <div>
               <Button fab={true} className={classNames(classes.root)} onClick={this.handleFabClick}>
-                {icon}
+                {buttonContent}
               </Button>
             </div>
           );

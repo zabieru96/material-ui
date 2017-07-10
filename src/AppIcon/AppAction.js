@@ -39,6 +39,12 @@ export const styleSheet = createStyleSheet('MuiAppAction', theme => ({
     float: 'right',
     textAlign: 'center',
     marginLeft: 5
+  },
+  link: {
+    color: 'inherit',
+    alignItems: 'center',
+    display: 'flex',
+    textDecoration: 'none'
   }
 }));
 
@@ -60,10 +66,14 @@ type Props = DefaultProps & {
    */
     icon: Element<*>,
   /**
+   * The URL to link to when the button is clicked.
+   * If defined, an `a` element will be used as the root node.
+   */
+    href?: string,
+  /**
    * Label to display for the current action
    */
     label: string,
-  //maybe href? and callback
   /**
    * Function called on click of action.
    */
@@ -73,20 +83,35 @@ type Props = DefaultProps & {
 function AppAction(props: Props) {
   const { classes, icon, label, onClick } = props;
 
-  return (
-    <div onClick={onClick} className={classNames(classes.root)}>
-      <span className={classNames(classes.icon)}>
-        {icon}
-      </span>
-      <span className={classNames(classes.label)}>
-        {label}
+  if(props.href){
+    return(
+      <div onClick={onClick} className={classNames(classes.root)}>
+        <a href={props.href} className={classNames(classes.link)}>
+          <span className={classNames(classes.icon)}>
+            {icon}
+          </span>
+          <span className={classNames(classes.label)}>
+            {label}
+          </span>
+        </a>
+      </div>
+    )
+  }else{
+    return (
+      <div onClick={onClick} className={classNames(classes.root)}>
+        <span className={classNames(classes.icon)}>
+          {icon}
         </span>
-    </div>
-  );
+        <span className={classNames(classes.label)}>
+          {label}
+        </span>
+      </div>
+    );
+  }
 }
 
 AppAction.defaultProps = {
-  role: 'appaction',
+  role: 'action',
 };
 
 export default withStyles(styleSheet)(AppAction);
