@@ -8,24 +8,38 @@ import type { Element } from 'react';
 import classNames from 'classnames';
 import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
-import ListItem from '../List/ListItem';
 
 export const styleSheet = createStyleSheet('MuiAppAction', theme => ({
   root: {
-    ...theme.typography.subheading,
-    height: 48,
+    height: 44,
+    width: 170,
+    borderRadius: 24,
     boxSizing: 'border-box',
     background: 'white',
-    overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    '&:focus': {
-      background: theme.palette.text.divider,
-    },
-    '&:hover': {
-      backgroundColor: theme.palette.text.divider,
-    },
+    alignItems: 'center',
+    display: 'flex',
+    margin: '4px auto',
+    boxShadow: theme.shadows[8],
   },
+  icon: {
+    background: 'blue',
+    borderRadius: '50%',
+    display: 'flex',
+    float: 'left',
+    height: 32,
+    width: 32,
+    marginLeft: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  label: {
+    display: 'flex',
+    float: 'right',
+    textAlign: 'center',
+    marginLeft: 5
+  }
 }));
 
 type DefaultProps = {
@@ -33,10 +47,6 @@ type DefaultProps = {
 };
 
 type Props = DefaultProps & {
-  /**
-   * App action contents.
-   */
-    children?: Element<*>,
   /**
    * Useful to extend the style applied to components.
    */
@@ -46,32 +56,32 @@ type Props = DefaultProps & {
    */
     className?: string,
   /**
+   * Icon to display for the current action
+   */
+    icon: Element<*>,
+  /**
+   * Label to display for the current action
+   */
+    label: string,
+  //maybe href? and callback
+  /**
    * Function called on click of action.
    */
     onClick?: Function,
-  /**
-   * @ignore
-   */
-    role?: string,
 };
 
 function AppAction(props: Props) {
-  const { classes, className: classNameProp, component, role, ...other } = props;
-
-  const className = classNames(
-    classes.root,
-    classNameProp,
-  );
+  const { classes, icon, label } = props;
 
   return (
-    <ListItem
-      button
-      role={role}
-      tabIndex="-1"
-      className={className}
-      component={component}
-      {...other}
-    />
+    <div className={classNames(classes.root)}>
+      <span className={classNames(classes.icon)}>
+        {icon}
+      </span>
+      <span className={classNames(classes.label)}>
+        {label}
+        </span>
+    </div>
   );
 }
 
