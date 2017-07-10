@@ -22,6 +22,7 @@ export const styleSheet = createStyleSheet('MuiAppAction', theme => ({
     display: 'flex',
     margin: '4px auto',
     boxShadow: theme.shadows[8],
+    cursor: 'pointer'
   },
   icon: {
     background: 'blue',

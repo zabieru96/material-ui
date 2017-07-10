@@ -74,7 +74,7 @@ class AppIcon extends Component{
       )
     }
 
-    handleFabClick = (e) => {
+    handleFabClick = () => {
       this.setState({
         open: !this.state.open,
         anchorEl: findDOMNode(this.refs.button)
@@ -105,7 +105,7 @@ class AppIcon extends Component{
         } = this.state;
 
         let transform = {
-          vertical: orientation[0] == 'top'? 30: -30,
+          vertical: orientation[0] == 'top'? 32: -28,
           horizontal: orientation[1] == 'left'? 126: 0
         };
 
