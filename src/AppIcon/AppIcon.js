@@ -14,11 +14,17 @@ export const styleSheet = createStyleSheet('MuiAppIcon', theme => ({
     boxShadow: 'none',
     color: theme.colorPrimary
   },
-  actionList: {
+  popover: {
     background: 'transparent',
     boxShadow: 'none',
     overflow: 'visible',
     display: 'flex',
+  },
+  actionList: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  reversed:{
     flexDirection: 'column-reverse'
   },
   arrow:{
@@ -131,7 +137,11 @@ class AppIcon extends Component{
             }}
           >
             {orientation[0] == 'bottom'? anchorArrow : ''}
-            {children}
+            <div
+              className={classNames({[classes.actionList]: true, [classes.reversed] : orientation[0] == 'top'})}
+            >
+              {children}
+            </div>
             {orientation[0] == 'top'? anchorArrow : ''}
           </div>
         );
@@ -146,7 +156,7 @@ class AppIcon extends Component{
               transformOrigin={transform}
               open={open}
               modal={false}
-              className={classNames(classes.actionList)}
+              className={classNames(classes.popover)}
               onRequestClose={this.handleRequestClose}
             >
               {content}
