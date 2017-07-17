@@ -82,7 +82,7 @@ type DefaultProps = {
   open: boolean,
   transformOrigin: Origin,
   transitionDuration: 'auto',
-  elevation: number,
+  elevation: number
 };
 
 type Props = DefaultProps & {
@@ -202,6 +202,7 @@ class Popover extends Component<DefaultProps, Props, void> {
     },
     transitionDuration: 'auto',
     elevation: 8,
+    id: "popover",
   };
 
   static getScale(value) {
@@ -387,6 +388,24 @@ class Popover extends Component<DefaultProps, Props, void> {
       vertical: this.handleGetOffsetTop(elemRect, transformOrigin.vertical) + contentAnchorOffset,
       horizontal: this.handleGetOffsetLeft(elemRect, transformOrigin.horizontal),
     };
+  }
+
+  reposition = () => {
+    if(this.props.open){
+
+      var element = document.getElementById(this.props.id);
+
+      const positioning = this.getPositioningStyle(element);
+
+      element.style.top = positioning.top;
+      element.style.left = positioning.left;
+      element.style.transformOrigin = positioning.transformOrigin;
+    }
+  };
+
+  componentDidMount() {
+    //this.reposition();
+    window.addEventListener("resize", this.reposition.bind(this));
   }
 
   render() {

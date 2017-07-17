@@ -11,7 +11,7 @@ export const styleSheet = createStyleSheet('MuiAvatarGroup', {
   root: {
     height: 30,
   },
-  avatar4: {
+  avatar: {
     height: 15,
     width: 15,
     display: 'inline-block'
@@ -33,12 +33,12 @@ function AvatarGroup(props: Props) {
   const content = React.Children.map(props.children, child => {
     if (child.type === Avatar)
       return React.cloneElement(child, {
-        className: classNames(classes.avatar4)
+        className: classNames(classes.avatar)
       })
   })
 
   return(
-    <div>
+    <div className={classNames(classes.root)}>
       {content}
     </div>
   )
