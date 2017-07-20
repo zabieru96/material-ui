@@ -404,7 +404,6 @@ class Popover extends Component<DefaultProps, Props, void> {
   };
 
   componentDidMount() {
-    //this.reposition();
     window.addEventListener("resize", this.reposition.bind(this));
   }
 
