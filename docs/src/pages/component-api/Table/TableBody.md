@@ -1,8 +1,10 @@
+<!--- This documentation is automatically generated, do not try to edit it. -->
+
 # TableBody
 
 
 
-## Properties
+## Props
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | children | node |  | The content of the component, normally `TableRow`. |

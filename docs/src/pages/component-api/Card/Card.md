@@ -1,12 +1,14 @@
+<!--- This documentation is automatically generated, do not try to edit it. -->
+
 # Card
 
 
 
-## Properties
+## Props
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| classes | object |  | Useful to extend the style applied to components. |
-| raised | bool | false | If `true`, the card will use raised styling. |
+| classes | Object |  | Useful to extend the style applied to components. |
+| raised | boolean | false | If `true`, the card will use raised styling. |
 
 Any other properties supplied will be spread to the root element.
 

@@ -1,8 +1,10 @@
+<!--- This documentation is automatically generated, do not try to edit it. -->
+
 # BottomNavigationButton
 
 
 
-## Properties
+## Props
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | classes | object |  | Useful to extend the style applied to components. |

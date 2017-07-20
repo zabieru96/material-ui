@@ -1,8 +1,10 @@
+<!--- This documentation is automatically generated, do not try to edit it. -->
+
 # Badge
 
 
 
-## Properties
+## Props
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | <span style="color: #31a148">badgeContent *</span> | node |  | The content rendered within the badge. |

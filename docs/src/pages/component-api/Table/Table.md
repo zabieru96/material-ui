@@ -1,8 +1,10 @@
+<!--- This documentation is automatically generated, do not try to edit it. -->
+
 # Table
 
 
 
-## Properties
+## Props
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | children | node |  | The content of the table, normally `TableHeader` and `TableBody`. |

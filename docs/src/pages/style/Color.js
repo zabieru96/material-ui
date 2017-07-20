@@ -3,7 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, createStyleSheet } from 'material-ui/styles';
-import * as colors from 'material-ui/styles/colors';
+import * as colors from 'material-ui/colors';
 import { getContrastRatio } from 'material-ui/styles/colorManipulator';
 
 const mainColors = [
@@ -62,9 +62,9 @@ export const styleSheet = createStyleSheet('colors', theme => ({
 function getColorBlock(classes, colorName, colorValue, colorTitle) {
   const bgColor = colors[colorName][colorValue];
 
-  let fgColor = colors.fullBlack;
+  let fgColor = colors.common.fullBlack;
   if (getContrastRatio(bgColor, fgColor) < 7) {
-    fgColor = colors.fullWhite;
+    fgColor = colors.common.fullWhite;
   }
 
   let blockTitle;
@@ -94,7 +94,9 @@ function getColorBlock(classes, colorName, colorValue, colorTitle) {
     <li style={rowStyle} key={colorValue}>
       {blockTitle}
       <div className={classes.colorContainer}>
-        <span>{colorValue}</span>
+        <span>
+          {colorValue}
+        </span>
         <span className={classes.colorValue}>
           {bgColor.toUpperCase()}
         </span>

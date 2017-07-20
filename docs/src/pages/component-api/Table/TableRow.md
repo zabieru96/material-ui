@@ -1,9 +1,11 @@
+<!--- This documentation is automatically generated, do not try to edit it. -->
+
 # TableRow
 
 Will automatically set dynamic row height
 based on the material table element parent (head, body, etc).
 
-## Properties
+## Props
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | children | node |  | Should be valid `<tr>` children such as `TableCell`. |

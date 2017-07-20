@@ -1,8 +1,10 @@
+<!--- This documentation is automatically generated, do not try to edit it. -->
+
 # TableHead
 
 
 
-## Properties
+## Props
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | children | node |  | Should be valid `<thead>` children such as `TableRow`. |

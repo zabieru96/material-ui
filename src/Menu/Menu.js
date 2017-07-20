@@ -1,47 +1,121 @@
-// @flow weak
+// @flow
 
 import React, { Component } from 'react';
+import type { Element } from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import { findDOMNode } from 'react-dom';
 import { createStyleSheet } from 'jss-theme-reactor';
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize';
 import Popover from '../internal/Popover';
 import withStyles from '../styles/withStyles';
 import MenuList from './MenuList';
+import type { TransitionCallback } from '../internal/Transition';
+
+type DefaultProps = {
+  open: boolean,
+  transitionDuration: 'auto',
+};
+
+type Props = DefaultProps & {
+  /**
+   * The DOM element used to set the position of the menu.
+   */
+  anchorEl?: Object,
+  /**
+   * Menu contents, normally `MenuItem`s.
+   */
+  children?: Element<*>,
+  /**
+   * Useful to extend the style applied to components.
+   */
+  classes: Object,
+  /**
+   * @ignore
+   */
+  className?: string,
+  /**
+   * Properties applied to the `MenuList` element.
+   */
+  MenuListProps?: Object,
+  /**
+   * Callback fired before the Menu enters.
+   */
+  onEnter?: TransitionCallback,
+  /**
+   * Callback fired when the Menu is entering.
+   */
+  onEntering?: TransitionCallback,
+  /**
+   * Callback fired when the Menu has entered.
+   */
+  onEntered?: TransitionCallback, // eslint-disable-line react/sort-prop-types
+  /**
+   * Callback fired before the Menu exits.
+   */
+  onExit?: TransitionCallback,
+  /**
+   * Callback fired when the Menu is exiting.
+   */
+  onExiting?: TransitionCallback,
+  /**
+   * Callback fired when the Menu has exited.
+   */
+  onExited?: TransitionCallback, // eslint-disable-line react/sort-prop-types
+  /**
+   * Callback fired when the component requests to be closed.
+   *
+   * @param {object} event The event source of the callback
+   */
+  onRequestClose?: Function,
+  /**
+   * If `true`, the menu is visible.
+   */
+  open?: boolean,
+  /**
+   * The length of the transition in `ms`, or 'auto'
+   */
+  transitionDuration?: number | 'auto',
+};
 
 export const styleSheet = createStyleSheet('MuiMenu', {
   root: {
-    maxHeight: 250,
+    /**
+     * specZ: The maximum height of a simple menu should be one or more rows less than the view
+     * height. This ensures a tappable area outside of the simple menu with which to dismiss
+     * the menu.
+     */
+    maxHeight: 'calc(100vh - 96px)',
   },
 });
 
-class Menu extends Component {
-  static defaultProps = {
+class Menu extends Component<DefaultProps, Props, void> {
+  static defaultProps: DefaultProps = {
     open: false,
     transitionDuration: 'auto',
   };
 
   menuList = undefined;
 
-  handleEnter = element => {
-    const list = findDOMNode(this.menuList);
+  handleEnter = (element: HTMLElement) => {
+    const menuList = findDOMNode(this.menuList);
 
     if (this.menuList && this.menuList.selectedItem) {
       // $FlowFixMe
       findDOMNode(this.menuList.selectedItem).focus();
-    } else if (list) {
+    } else if (menuList) {
       // $FlowFixMe
-      list.firstChild.focus();
+      menuList.firstChild.focus();
     }
 
+    // Let's ignore that piece of logic if users are already overriding the width
+    // of the menu.
     // $FlowFixMe
-    if (list && element.clientHeight < list.clientHeight) {
+    if (menuList && element.clientHeight < menuList.clientHeight && !menuList.style.width) {
       const size = `${getScrollbarSize()}px`;
       // $FlowFixMe
-      list.style.paddingRight = size;
+      menuList.style.paddingRight = size;
       // $FlowFixMe
-      list.style.width = `calc(100% + ${size})`;
+      menuList.style.width = `calc(100% + ${size})`;
     }
 
     if (this.props.onEnter) {
@@ -49,10 +123,13 @@ class Menu extends Component {
     }
   };
 
-  handleListKeyDown = (event, key) => {
+  handleListKeyDown = (event: SyntheticUIEvent, key: string) => {
     if (key === 'tab') {
       event.preventDefault();
-      return this.props.onRequestClose(event);
+      const { onRequestClose } = this.props;
+      if (onRequestClose) {
+        return onRequestClose(event);
+      }
     }
 
     return false;
@@ -92,7 +169,6 @@ class Menu extends Component {
         getContentAnchorEl={this.getContentAnchorEl}
         className={classNames(classes.root, className)}
         open={open}
-        enteredClassName={classes.entered}
         onEnter={this.handleEnter}
         onEntering={onEntering}
         onEntered={onEntered}
@@ -118,66 +194,5 @@ class Menu extends Component {
     );
   }
 }
-
-Menu.propTypes = {
-  /**
-   * The DOM element used to set the position of the menu.
-   */
-  anchorEl: PropTypes.object,
-  /**
-   * Menu contents, normally `MenuItem`s.
-   */
-  children: PropTypes.node,
-  /**
-   * Useful to extend the style applied to components.
-   */
-  classes: PropTypes.object.isRequired,
-  /**
-   * @ignore
-   */
-  className: PropTypes.string,
-  /**
-   * Properties applied to the `MenuList` element.
-   */
-  MenuListProps: PropTypes.object,
-  /**
-   * Callback fired before the Menu enters.
-   */
-  onEnter: PropTypes.func,
-  /**
-   * Callback fired when the Menu is entering.
-   */
-  onEntering: PropTypes.func,
-  /**
-   * Callback fired when the Menu has entered.
-   */
-  onEntered: PropTypes.func, // eslint-disable-line react/sort-prop-types
-  /**
-   * Callback fired before the Menu exits.
-   */
-  onExit: PropTypes.func,
-  /**
-   * Callback fired when the Menu is exiting.
-   */
-  onExiting: PropTypes.func,
-  /**
-   * Callback fired when the Menu has exited.
-   */
-  onExited: PropTypes.func, // eslint-disable-line react/sort-prop-types
-  /**
-   * Callback function fired when the menu is requested to be closed.
-   *
-   * @param {event} event The event that triggered the close request
-   */
-  onRequestClose: PropTypes.func,
-  /**
-   * If `true`, the menu is visible.
-   */
-  open: PropTypes.bool,
-  /**
-   * The length of the transition in `ms`, or 'auto'
-   */
-  transitionDuration: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-};
 
 export default withStyles(styleSheet)(Menu);

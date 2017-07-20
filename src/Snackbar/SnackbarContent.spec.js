@@ -10,13 +10,13 @@ describe('<SnackbarContent />', () => {
   let classes;
 
   before(() => {
-    shallow = createShallow({ dive: true });
+    shallow = createShallow({ untilSelector: 'withStyles(Paper)' });
     classes = shallow.context.styleManager.render(styleSheet);
   });
 
   it('should render a Paper with classes', () => {
     const wrapper = shallow(<SnackbarContent message="message" />);
-    assert.strictEqual(wrapper.name(), 'withStyles(Paper)');
+    assert.strictEqual(wrapper.name(), 'Paper');
     assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
   });
 
@@ -35,14 +35,6 @@ describe('<SnackbarContent />', () => {
       const wrapper = shallow(<SnackbarContent message={message} />);
       assert.strictEqual(wrapper.childAt(0).hasClass(classes.message), true);
       assert.strictEqual(wrapper.childAt(0).contains(message), true);
-    });
-  });
-
-  describe('prop: disableTypography', () => {
-    it('should not use a wrapper', () => {
-      const message = <span>message</span>;
-      const wrapper = shallow(<SnackbarContent message={message} disableTypography />);
-      assert.strictEqual(wrapper.childAt(0).equals(message), true);
     });
   });
 });

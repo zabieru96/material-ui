@@ -7,6 +7,7 @@ import keycode from 'keycode';
 import contains from 'dom-helpers/query/contains';
 import { createShallow, createMount } from '../test-utils';
 import consoleErrorMock from '../../test/utils/consoleErrorMock';
+import Fade from '../transitions/Fade';
 import Backdrop from './Backdrop';
 import Modal, { styleSheet } from './Modal';
 
@@ -26,7 +27,11 @@ describe('<Modal />', () => {
   });
 
   it('should render null by default', () => {
-    const wrapper = shallow(<Modal><p>Hello World</p></Modal>);
+    const wrapper = shallow(
+      <Modal>
+        <p>Hello World</p>
+      </Modal>,
+    );
     assert.strictEqual(wrapper.node, null, 'should be null');
   });
 
@@ -34,7 +39,11 @@ describe('<Modal />', () => {
     let wrapper;
 
     before(() => {
-      wrapper = shallow(<Modal show data-my-prop="woof"><p>Hello World</p></Modal>);
+      wrapper = shallow(
+        <Modal show data-my-prop="woof">
+          <p>Hello World</p>
+        </Modal>,
+      );
     });
 
     it('should render the modal div inside the portal', () => {
@@ -422,14 +431,52 @@ describe('<Modal />', () => {
   describe('prop: keepMounted', () => {
     it('should keep the children in the DOM', () => {
       const children = <p>Hello World</p>;
-      const wrapper = shallow(<Modal keepMounted show={false}><div>{children}</div></Modal>);
+      const wrapper = shallow(
+        <Modal keepMounted show={false}>
+          <div>
+            {children}
+          </div>
+        </Modal>,
+      );
       assert.strictEqual(wrapper.contains(children), true);
     });
 
     it('should not keep the children in the DOM', () => {
       const children = <p>Hello World</p>;
-      const wrapper = shallow(<Modal show={false}><div>{children}</div></Modal>);
+      const wrapper = shallow(
+        <Modal show={false}>
+          <div>
+            {children}
+          </div>
+        </Modal>,
+      );
       assert.strictEqual(wrapper.contains(children), false);
+    });
+  });
+
+  describe('props: onExited', () => {
+    it('should avoid concurrency issue by chaining internal with the public API', () => {
+      const handleExited = spy();
+      const wrapper = shallow(
+        <Modal onExited={handleExited} show>
+          <Fade in />
+        </Modal>,
+      );
+      wrapper.find(Fade).at(1).simulate('exited');
+      assert.strictEqual(handleExited.callCount, 1);
+      assert.strictEqual(wrapper.state().exited, true);
+    });
+
+    it('should rely on the internal backdrop events', () => {
+      const handleExited = spy();
+      const wrapper = shallow(
+        <Modal onExited={handleExited} show>
+          <div />
+        </Modal>,
+      );
+      wrapper.find(Fade).at(0).simulate('exited');
+      assert.strictEqual(handleExited.callCount, 1);
+      assert.strictEqual(wrapper.state().exited, true);
     });
   });
 });

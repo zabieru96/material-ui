@@ -26,7 +26,7 @@ function getDeprecatedInfo(type) {
   return false;
 }
 
-function generatePropDescription(required, description, type) {
+function generatePropDescription(description, type) {
   let deprecated = '';
 
   if (type.name === 'custom') {
@@ -46,10 +46,18 @@ function generatePropDescription(required, description, type) {
     .replace(/\n/g, ' ')
     .replace(/\r/g, '');
 
-  if (parsed.tags.some(tag => tag.title === 'ignore')) return null;
+  if (parsed.tags.some(tag => tag.title === 'ignore')) {
+    return null;
+  }
+
   let signature = '';
 
-  if (type.name === 'func' && parsed.tags.length > 0) {
+  if (
+    (type.name === 'func' ||
+      type.name === 'Function' ||
+      (type.name === 'signature' && type.type === 'function')) &&
+    parsed.tags.length > 0
+  ) {
     // Remove new lines from tag descriptions to avoid markdown errors.
     parsed.tags.forEach(tag => {
       if (tag.description) {
@@ -138,19 +146,15 @@ function getProp(props, key) {
 }
 
 function generateProps(props) {
-  const header = '## Properties';
+  const header = '## Props';
 
   let text = `${header}
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|\n`;
 
-  text = Object.keys(props).reduce((textProps, key) => {
-    const prop = getProp(props, key);
-    const description = generatePropDescription(
-      prop.required,
-      prop.description,
-      prop.flowType || prop.type,
-    );
+  text = Object.keys(props).sort().reduce((textProps, propRaw) => {
+    const prop = getProp(props, propRaw);
+    const description = generatePropDescription(prop.description, prop.flowType || prop.type);
 
     if (description === null) {
       return textProps;
@@ -163,17 +167,17 @@ function generateProps(props) {
     }
 
     if (prop.required) {
-      key = `<span style="color: #31a148">${key}\u2009*</span>`;
+      propRaw = `<span style="color: #31a148">${propRaw}\u2009*</span>`;
     }
 
     const type = prop.flowType || prop.type;
     if (type.name === 'custom') {
       if (getDeprecatedInfo(prop.type)) {
-        key = `~~${key}~~`;
+        propRaw = `~~${propRaw}~~`;
       }
     }
 
-    textProps += `| ${key} | ${generatePropType(type)} | ${defaultValue} | ${description} |\n`;
+    textProps += `| ${propRaw} | ${generatePropType(type)} | ${defaultValue} | ${description} |\n`;
 
     return textProps;
   }, text);
@@ -201,6 +205,7 @@ you need to use the following style sheet name: \`${styles.name}\`.`
 
 export default function generateMarkdown(name, reactAPI) {
   return (
+    '<!--- This documentation is automatically generated, do not try to edit it. -->\n\n' +
     `${generateTitle(name)}\n` +
     `${generateDescription(reactAPI.description)}\n` +
     `${generateProps(reactAPI.props)}\n` +

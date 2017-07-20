@@ -1,8 +1,10 @@
+<!--- This documentation is automatically generated, do not try to edit it. -->
+
 # TableSortLabel
 
 A button based label for placing inside `TableCell` for column sorting.
 
-## Properties
+## Props
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
 | active | bool | false | If `true`, the label will have the active styling (should be true for the sorted column). |

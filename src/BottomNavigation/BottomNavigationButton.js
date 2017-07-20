@@ -52,10 +52,10 @@ export const styleSheet = createStyleSheet('MuiBottomNavigationButton', theme =>
 
 class BottomNavigationButton extends Component {
   handleChange = event => {
-    const { onChange, index, onClick } = this.props;
+    const { onChange, value, onClick } = this.props;
 
     if (onChange) {
-      onChange(event, index);
+      onChange(event, value);
     }
 
     if (onClick) {
@@ -72,7 +72,7 @@ class BottomNavigationButton extends Component {
       className: classNameProp,
       showLabel: showLabelProp,
       onChange,
-      index,
+      value,
       ...other
     } = this.props;
 
@@ -92,7 +92,9 @@ class BottomNavigationButton extends Component {
 
     const icon = isValidElement(iconProp)
       ? cloneElement(iconProp, { className: iconClassName })
-      : <Icon>{iconProp}</Icon>;
+      : <Icon>
+          {iconProp}
+        </Icon>;
 
     const labelClassName = classNames(classes.label, {
       [classes.selectedLabel]: selected,
@@ -124,10 +126,6 @@ BottomNavigationButton.propTypes = {
    */
   icon: PropTypes.node,
   /**
-   * @ignore
-   */
-  index: PropTypes.number,
-  /**
    * The label element.
    */
   label: PropTypes.node,
@@ -147,6 +145,10 @@ BottomNavigationButton.propTypes = {
    * If `true`, the BottomNavigationButton will show its label.
    */
   showLabel: PropTypes.bool,
+  /**
+   * @ignore
+   */
+  value: PropTypes.number,
 };
 
 export default withStyles(styleSheet)(BottomNavigationButton);

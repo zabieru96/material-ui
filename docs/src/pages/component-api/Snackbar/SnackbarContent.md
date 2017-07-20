@@ -1,14 +1,15 @@
+<!--- This documentation is automatically generated, do not try to edit it. -->
+
 # SnackbarContent
 
 
 
-## Properties
+## Props
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| action | node |  | The action to display. |
-| classes | object |  | Useful to extend the style applied to components. |
-| disableTypography | bool | false | If `true`, the message won't be wrapped by a typography component. For instance, that can be usefull to can render an h4 instead of a |
-| <span style="color: #31a148">message *</span> | node |  | The message to display. |
+| action | Element |  | The action to display. |
+| classes | Object |  | Useful to extend the style applied to components. |
+| <span style="color: #31a148">message *</span> | Element |  | The message to display. |
 
 Any other properties supplied will be spread to the root element.
 

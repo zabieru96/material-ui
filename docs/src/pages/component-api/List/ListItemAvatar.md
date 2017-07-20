@@ -1,12 +1,14 @@
+<!--- This documentation is automatically generated, do not try to edit it. -->
+
 # ListItemAvatar
 
 It's a simple wrapper to apply the `dense` mode styles to `Avatar`.
 
-## Properties
+## Props
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| <span style="color: #31a148">children *</span> | element |  | The content of the component, normally `Avatar`. |
-| classes | object |  | Useful to extend the style applied to components. |
+| <span style="color: #31a148">children *</span> | Element |  | The content of the component, normally `Avatar`. |
+| classes | Object |  | Useful to extend the style applied to components. |
 
 Any other properties supplied will be spread to the root element.
 

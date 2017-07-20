@@ -6,7 +6,7 @@ import { withStyles, createStyleSheet } from 'material-ui/styles';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import FaceIcon from 'material-ui-icons/Face';
-import { grey } from 'material-ui/styles/colors';
+import grey from 'material-ui/colors/grey';
 import uxecoImage from 'docs/src/assets/images/uxceo-128.jpg';
 
 const styleSheet = createStyleSheet('Chips', theme => ({
@@ -49,7 +49,11 @@ function Chips(props) {
         className={classes.chip}
       />
       <Chip
-        avatar={<Avatar><FaceIcon className={classes.svgIcon} /></Avatar>}
+        avatar={
+          <Avatar>
+            <FaceIcon className={classes.svgIcon} />
+          </Avatar>
+        }
         label="Clickable Deletable Chip"
         onClick={handleClick}
         onRequestDelete={handleRequestDelete}
