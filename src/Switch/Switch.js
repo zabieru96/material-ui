@@ -38,6 +38,7 @@ export const styleSheet = createStyleSheet('MuiSwitch', theme => ({
   },
   // For SwitchBase
   default: {
+    zIndex: 1,
     color: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[400],
     transition: theme.transitions.create('transform', {
       duration: theme.transitions.duration.shortest,
@@ -129,7 +130,7 @@ Switch.propTypes = {
   /**
    * Callback fired when the  is changed.
    *
-   * @param {object} event `change` event
+   * @param {object} event The event source of the callback
    * @param {boolean} checked The `checked` value of the switch
    */
   onChange: PropTypes.func,

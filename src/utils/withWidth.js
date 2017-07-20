@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import EventListener from 'react-event-listener';
 import PropTypes from 'prop-types';
+import debounce from 'lodash/debounce';
 import createEagerFactory from 'recompose/createEagerFactory';
 import wrapDisplayName from 'recompose/wrapDisplayName';
 import customPropTypes from '../utils/customPropTypes';
@@ -10,6 +11,7 @@ import { keys } from '../styles/breakpoints';
 
 /**
  * By default, returns true if screen width is the same or greater than the given breakpoint.
+ *
  * @param screenWidth
  * @param breakpoint
  * @param inclusive - defaults to true
@@ -23,6 +25,7 @@ export const isWidthUp = (breakpoint, screenWidth, inclusive = true) => {
 
 /**
  * By default, returns true if screen width is the same or less than the given breakpoint.
+ *
  * @param screenWidth
  * @param breakpoint
  * @param inclusive - defaults to true
@@ -52,17 +55,12 @@ function withWidth(options = {}) {
       }
 
       componentWillUnmount() {
-        clearTimeout(this.deferTimer);
+        this.handleResize.cancel();
       }
 
-      deferTimer = null;
-
-      handleResize = () => {
-        clearTimeout(this.deferTimer);
-        this.deferTimer = setTimeout(() => {
-          this.updateWidth(window.innerWidth);
-        }, resizeInterval);
-      };
+      handleResize = debounce(() => {
+        this.updateWidth(window.innerWidth);
+      }, resizeInterval);
 
       updateWidth(innerWidth) {
         const breakpoints = this.context.styleManager.theme.breakpoints;

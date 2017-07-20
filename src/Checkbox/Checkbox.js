@@ -88,6 +88,10 @@ Checkbox.propTypes = {
    * Properties applied to the `input` element.
    */
   inputProps: PropTypes.object,
+  /**
+   * Use that property to pass a ref callback to the native input component.
+   */
+  inputRef: PropTypes.func,
   /*
    * @ignore
    */
@@ -95,7 +99,7 @@ Checkbox.propTypes = {
   /**
    * Callback fired when the state is changed.
    *
-   * @param {object} event `change` event
+   * @param {object} event The event source of the callback
    * @param {boolean} checked The `checked` value of the switch
    */
   onChange: PropTypes.func,
