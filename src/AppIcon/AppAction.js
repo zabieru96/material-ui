@@ -8,6 +8,7 @@ import type { Element } from 'react';
 import classNames from 'classnames';
 import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
+import grey from '../colors/grey'
 
 export const styleSheet = createStyleSheet('MuiAppAction', theme => ({
   root: {
@@ -25,7 +26,7 @@ export const styleSheet = createStyleSheet('MuiAppAction', theme => ({
     cursor: 'pointer'
   },
   icon: {
-    background: 'blue',
+    background: grey[300],
     borderRadius: '50%',
     display: 'flex',
     float: 'left',

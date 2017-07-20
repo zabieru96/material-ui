@@ -13,7 +13,8 @@ export const styleSheet = createStyleSheet('MuiAppIcon', theme => ({
     height: '44px',
     width: '44px',
     boxShadow: 'none',
-    color: theme.colorPrimary
+    color: theme.colorPrimary,
+    background: theme.colorAccent
   },
   popover: {
     background: 'transparent',
