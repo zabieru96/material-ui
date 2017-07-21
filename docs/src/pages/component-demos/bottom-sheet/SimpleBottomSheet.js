@@ -23,13 +23,17 @@ const styleSheet = createStyleSheet('SimpleBottomSheet', {
 class SimpleBottomSheet extends Component {
 
   state = {
-    open: false,
+    persistent: false,
+    modal: false
   };
 
-  openSheet = () => {
-    this.setState({open: true});
+  togglePersistentSheet = () => {
+    this.setState({persistent: !this.state.persistent});
   };
 
+  toggleModalSheet = () => {
+    this.setState({modal: !this.state.modal});
+  };
 
   render() {
     const classes = this.props.classes;
@@ -65,10 +69,20 @@ class SimpleBottomSheet extends Component {
 
     return (
       <div className={classes.root}>
-        <Button onClick={this.openSheet}>Open BottomSheet</Button>
+        <Button onClick={this.togglePersistentSheet}>Toggle Simple BottomSheet</Button>
         <BottomSheet
-          open={this.state.open}
+          open={this.state.persistent}
           heading="Hello Sheet"
+        >
+          {options}
+        </BottomSheet>
+
+        <Button onClick={this.toggleModalSheet}>Toggle Modal BottomSheet</Button>
+        <BottomSheet
+          open={this.state.modal}
+          onRequestClose={this.toggleModalSheet}
+          heading="Hello Sheet"
+          modal={true}
         >
           {options}
         </BottomSheet>

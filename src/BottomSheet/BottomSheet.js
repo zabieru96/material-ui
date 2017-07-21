@@ -67,16 +67,14 @@ class BottomSheet extends Component{
     const {
       classes,
       className,
+      enterTransitionDuration,
+      leaveTransitionDuration,
       children,
       open,
       heading,
       modal,
       ...other
     } = this.props;
-
-    // const {
-    //   open
-    // } = this.state;
 
     const header = heading? heading : "";
 
@@ -85,7 +83,7 @@ class BottomSheet extends Component{
         <Modal
           backdropTransitionDuration={open ? duration.leavingScreen : duration.leavingScreen}
           show={open}
-          onRequestClose={this.handleClose}
+          {...other}
         >
           <Slide
             in={open}
@@ -107,13 +105,20 @@ class BottomSheet extends Component{
     }else{
       return (
         <div>
-          <Paper
-            square
-            className={classNames(classes.paper, classes.persistent)}
+          <Slide
+            in={open}
+            direction='up'
+            enterTransitionDuration={300}
+            leaveTransitionDuration={300}
           >
-            <span className={classNames(classes.heading)}>{header}</span>
-            {children}
-          </Paper>
+            <Paper
+              square
+              className={classNames(classes.paper, classes.persistent)}
+            >
+              <span className={classNames(classes.heading)}>{header}</span>
+              {children}
+            </Paper>
+          </Slide>
         </div>
       )
     }
