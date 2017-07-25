@@ -72,7 +72,7 @@ class SimpleBottomSheet extends Component {
         <Button onClick={this.togglePersistentSheet}>Toggle Simple BottomSheet</Button>
         <BottomSheet
           open={this.state.persistent}
-          heading="Hello Sheet"
+          heading="Persistent Sheet"
         >
           {options}
         </BottomSheet>
@@ -81,7 +81,7 @@ class SimpleBottomSheet extends Component {
         <BottomSheet
           open={this.state.modal}
           onRequestClose={this.toggleModalSheet}
-          heading="Hello Sheet"
+          heading="Modal Sheet"
           modal={true}
         >
           {options}
