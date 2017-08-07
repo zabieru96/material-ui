@@ -22,7 +22,7 @@ to discuss the approach before submitting a PR.
 - [Bottom sheets](https://www.google.com/design/spec/components/bottom-sheets.html)
 - **[Buttons](https://material.io/guidelines/components/buttons.html) ✓**
   - **[Flat & raised buttons](https://www.google.com/design/spec/components/buttons.html#buttons-flat-raised-buttons) ✓**
-  - [Toggle buttons](https://www.google.com/design/spec/components/buttons.html#buttons-toggle-buttons)
+  - [Toggle buttons](https://www.google.com/design/spec/components/buttons.html#buttons-toggle-buttons) ✓**
   - **[Icon toggles](https://www.google.com/design/spec/components/buttons.html#buttons-toggle-buttons) (Custom Checkbox) ✓**
   - [Dropdown: Mobile: Dropdown buttons](https://www.google.com/design/spec/components/buttons.html#buttons-dropdown-buttons) (DropDownMenu)
   - [Dropdown: Mobile: Generic overflow](https://www.google.com/design/spec/components/buttons.html#buttons-dropdown-buttons)
