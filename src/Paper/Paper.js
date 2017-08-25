@@ -1,12 +1,12 @@
 // @flow
 
 import React from 'react';
+import type { ComponentType } from 'react';
 import classNames from 'classnames';
 import warning from 'warning';
-import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
 
-export const styleSheet = createStyleSheet('MuiPaper', theme => {
+export const styles = (theme: Object) => {
   const shadows = {};
 
   theme.shadows.forEach((shadow, index) => {
@@ -24,19 +24,20 @@ export const styleSheet = createStyleSheet('MuiPaper', theme => {
     },
     ...shadows,
   };
-});
+};
 
 type DefaultProps = {
+  classes: Object,
   component: string,
   elevation: number,
   square: boolean,
 };
 
-type Props = DefaultProps & {
+export type Props = {
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
@@ -45,7 +46,7 @@ type Props = DefaultProps & {
    * The component used for the root node.
    * Either a string to use a DOM element or a component.
    */
-  component?: string | Function,
+  component?: string | ComponentType<*>,
   /**
    * Shadow depth, corresponds to `dp` in the spec.
    * It's accepting values between 0 and 24 inclusive.
@@ -57,7 +58,9 @@ type Props = DefaultProps & {
   square?: boolean,
 };
 
-function Paper(props: Props) {
+type AllProps = DefaultProps & Props;
+
+function Paper(props: AllProps) {
   const {
     classes,
     className: classNameProp,
@@ -90,4 +93,4 @@ Paper.defaultProps = {
   square: false,
 };
 
-export default withStyles(styleSheet)(Paper);
+export default withStyles(styles, { name: 'MuiPaper' })(Paper);

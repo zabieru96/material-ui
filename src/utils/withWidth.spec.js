@@ -11,14 +11,17 @@ const Empty = () => <div />;
 Empty.propTypes = {}; // Breaks the referencial transparency for testing purposes.
 const EmptyWithWidth = withWidth()(Empty);
 
-const TEST_ENV_WIDTH = window.innerWidth > createBreakpoints().getWidth('md') ? 'md' : 'sm';
+const breakpoints = createBreakpoints();
+const TEST_ENV_WIDTH = window.innerWidth > breakpoints.getWidth('md') ? 'md' : 'sm';
 
 describe('withWidth', () => {
   let shallow;
   let mount;
 
   before(() => {
-    shallow = createShallow();
+    shallow = createShallow({
+      dive: true,
+    });
     mount = createMount();
   });
 
@@ -27,7 +30,7 @@ describe('withWidth', () => {
   });
 
   describe('server side rendering', () => {
-    it('should not render the children as the width is unkown', () => {
+    it('should not render the children as the width is unknown', () => {
       const wrapper = shallow(<EmptyWithWidth />);
       assert.strictEqual(wrapper.type(), null, 'should render nothing');
     });
@@ -80,7 +83,6 @@ describe('withWidth', () => {
       const wrapper = shallow(<EmptyWithWidth />);
       const instance = wrapper.instance();
       const updateWidth = instance.updateWidth.bind(instance);
-      const breakpoints = wrapper.context().styleManager.theme.breakpoints;
 
       breakpoints.keys.forEach(key => {
         updateWidth(breakpoints.getWidth(key));
@@ -109,9 +111,9 @@ describe('withWidth', () => {
     });
   });
 
-  describe('props: initalWidth', () => {
+  describe('prop: initialWidth', () => {
     it('should work as expected', () => {
-      const element = <EmptyWithWidth initalWidth="lg" />;
+      const element = <EmptyWithWidth initialWidth="lg" />;
 
       // First mount on the server
       const wrapper1 = shallow(element);

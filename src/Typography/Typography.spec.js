@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import Typography, { styleSheet } from './Typography';
+import { createShallow, getClasses } from '../test-utils';
+import Typography from './Typography';
 
 describe('<Typography />', () => {
   let shallow;
@@ -11,7 +11,7 @@ describe('<Typography />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<Typography />);
   });
 
   it('should render the text', () => {
@@ -21,28 +21,28 @@ describe('<Typography />', () => {
 
   it('should spread props', () => {
     const wrapper = shallow(<Typography data-test="hello">Hello</Typography>);
-    assert.strictEqual(wrapper.prop('data-test'), 'hello', 'should be spread on the ButtonBase');
+    assert.strictEqual(wrapper.props()['data-test'], 'hello');
   });
 
   it('should render body1 root by default', () => {
     const wrapper = shallow(<Typography>Hello</Typography>);
-    assert.strictEqual(wrapper.hasClass(classes.body1), true, 'should be body1 text');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should be root');
+    assert.strictEqual(wrapper.hasClass(classes.body1), true);
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   it('should merge user classes', () => {
-    const wrapper = shallow(<Typography className="woof">Hello</Typography>);
-    assert.strictEqual(wrapper.hasClass(classes.body1), true, 'should be body1 text');
-    assert.strictEqual(wrapper.hasClass('woof'), true, 'should have the woof class');
+    const wrapper = shallow(<Typography className="woofTypography">Hello</Typography>);
+    assert.strictEqual(wrapper.hasClass(classes.body1), true);
+    assert.strictEqual(wrapper.hasClass('woofTypography'), true);
   });
 
   it('should center text', () => {
     const wrapper = shallow(
-      <Typography align="center" className="woof">
+      <Typography align="center" className="woofTypography">
         Hello
       </Typography>,
     );
-    assert.strictEqual(wrapper.hasClass(classes.alignCenter), true, 'should be center text');
+    assert.strictEqual(wrapper.hasClass(classes.alignCenter), true);
   });
   [
     'display4',

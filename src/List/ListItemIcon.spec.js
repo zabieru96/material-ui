@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import ListItemIcon, { styleSheet } from './ListItemIcon';
+import { createShallow, getClasses } from '../test-utils';
+import ListItemIcon from './ListItemIcon';
 
 describe('<ListItemIcon />', () => {
   let shallow;
@@ -11,7 +11,11 @@ describe('<ListItemIcon />', () => {
 
   before(() => {
     shallow = createShallow();
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(
+      <ListItemIcon>
+        <span />
+      </ListItemIcon>,
+    );
   });
 
   it('should render a span', () => {
@@ -31,6 +35,6 @@ describe('<ListItemIcon />', () => {
     );
     assert.strictEqual(wrapper.hasClass('foo'), true, 'should have the "foo" class');
     assert.strictEqual(wrapper.hasClass('bar'), true, 'should have the "bar" class');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 });

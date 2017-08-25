@@ -3,8 +3,8 @@
 import React from 'react';
 import { assert } from 'chai';
 import { spy, useFakeTimers } from 'sinon';
-import { createShallow, createMount } from '../test-utils';
-import Snackbar, { styleSheet } from './Snackbar';
+import { createShallow, createMount, getClasses } from '../test-utils';
+import Snackbar from './Snackbar';
 import Slide from '../transitions/Slide';
 
 describe('<Snackbar />', () => {
@@ -14,7 +14,7 @@ describe('<Snackbar />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<Snackbar open />);
     mount = createMount();
   });
 
@@ -78,7 +78,7 @@ describe('<Snackbar />', () => {
       assert.deepEqual(handleRequestClose.args[0], [null, 'timeout']);
     });
 
-    it('should not call onRequestClose when the autoHideDuration is reseted', () => {
+    it('should not call onRequestClose when the autoHideDuration is reset', () => {
       const handleRequestClose = spy();
       const autoHideDuration = 2e3;
       const wrapper = mount(

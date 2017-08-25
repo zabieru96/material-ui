@@ -1,22 +1,20 @@
 // @flow
 
-import React, { Component } from 'react';
-import type { Element } from 'react';
+import React from 'react';
+import type { Node } from 'react';
 import classNames from 'classnames';
 import { findDOMNode } from 'react-dom';
-import { createStyleSheet } from 'jss-theme-reactor';
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize';
-import Popover from '../internal/Popover';
 import withStyles from '../styles/withStyles';
+import Popover from '../internal/Popover';
 import MenuList from './MenuList';
 import type { TransitionCallback } from '../internal/Transition';
 
 type DefaultProps = {
-  open: boolean,
-  transitionDuration: 'auto',
+  classes: Object,
 };
 
-type Props = DefaultProps & {
+export type Props = {
   /**
    * The DOM element used to set the position of the menu.
    */
@@ -24,11 +22,11 @@ type Props = DefaultProps & {
   /**
    * Menu contents, normally `MenuItem`s.
    */
-  children?: Element<*>,
+  children?: Node,
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
@@ -77,7 +75,9 @@ type Props = DefaultProps & {
   transitionDuration?: number | 'auto',
 };
 
-export const styleSheet = createStyleSheet('MuiMenu', {
+type AllProps = DefaultProps & Props;
+
+export const styles = {
   root: {
     /**
      * specZ: The maximum height of a simple menu should be one or more rows less than the view
@@ -85,11 +85,17 @@ export const styleSheet = createStyleSheet('MuiMenu', {
      * the menu.
      */
     maxHeight: 'calc(100vh - 96px)',
+    WebkitOverflowScrolling: 'touch', // Add iOS momentum scrolling.
+    // So we see the menu when it's empty.
+    minWidth: 16,
+    minHeight: 16,
   },
-});
+};
 
-class Menu extends Component<DefaultProps, Props, void> {
-  static defaultProps: DefaultProps = {
+class Menu extends React.Component<AllProps, void> {
+  props: AllProps;
+  static defaultProps = {
+    classes: {},
     open: false,
     transitionDuration: 'auto',
   };
@@ -102,7 +108,7 @@ class Menu extends Component<DefaultProps, Props, void> {
     if (this.menuList && this.menuList.selectedItem) {
       // $FlowFixMe
       findDOMNode(this.menuList.selectedItem).focus();
-    } else if (menuList) {
+    } else if (menuList && menuList.firstChild) {
       // $FlowFixMe
       menuList.firstChild.focus();
     }
@@ -123,12 +129,11 @@ class Menu extends Component<DefaultProps, Props, void> {
     }
   };
 
-  handleListKeyDown = (event: SyntheticUIEvent, key: string) => {
+  handleListKeyDown = (event: SyntheticUIEvent<>, key: string) => {
     if (key === 'tab') {
       event.preventDefault();
-      const { onRequestClose } = this.props;
-      if (onRequestClose) {
-        return onRequestClose(event);
+      if (this.props.onRequestClose) {
+        return this.props.onRequestClose(event);
       }
     }
 
@@ -145,38 +150,12 @@ class Menu extends Component<DefaultProps, Props, void> {
   };
 
   render() {
-    const {
-      anchorEl,
-      children,
-      classes,
-      className,
-      open,
-      MenuListProps,
-      onEnter,
-      onEntering,
-      onEntered,
-      onExit,
-      onExiting,
-      onExited,
-      onRequestClose,
-      transitionDuration,
-      ...other
-    } = this.props;
-
+    const { children, classes, className, MenuListProps, onEnter, ...other } = this.props;
     return (
       <Popover
-        anchorEl={anchorEl}
         getContentAnchorEl={this.getContentAnchorEl}
         className={classNames(classes.root, className)}
-        open={open}
         onEnter={this.handleEnter}
-        onEntering={onEntering}
-        onEntered={onEntered}
-        onExiting={onExiting}
-        onExit={onExit}
-        onExited={onExited}
-        onRequestClose={onRequestClose}
-        transitionDuration={transitionDuration}
         {...other}
       >
         <MenuList
@@ -195,4 +174,4 @@ class Menu extends Component<DefaultProps, Props, void> {
   }
 }
 
-export default withStyles(styleSheet)(Menu);
+export default withStyles(styles, { name: 'MuiMenu' })(Menu);

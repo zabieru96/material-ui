@@ -4,7 +4,7 @@ The following is a list of Material Design components & features.
 Those currently supported by Material-UI are **highlighted ✓**.
 
 While we strive to follow the guidelines where practical (applying
-common sense where guidelines contadict - a more common occurence than
+common sense where guidelines contradict - a more common occurence than
 one might expect), we do not expect to support every component, or every
 feature of every component, but rather to provide the building blocks to
 allow developers to create compelling user interfaces and experiences.
@@ -38,7 +38,7 @@ to discuss the approach before submitting a PR.
 - **[Cards](https://www.google.com/design/spec/components/cards.html) ✓**
 - **[Chips](https://www.google.com/design/spec/components/chips.html) ✓**
   - **[Standard](https://www.google.com/design/spec/components/chips.html) ✓**
-  - [Contact](https://www.google.com/design/spec/components/chips.html#chips-contact-chips)
+  - **[Contact](https://www.google.com/design/spec/components/chips.html#chips-contact-chips) ✓**
 - **[Data tables](https://www.google.com/design/spec/components/data-tables.html) ✓**
   - **Sortable ✓**
   - **Selectable ✓**
@@ -53,7 +53,7 @@ to discuss the approach before submitting a PR.
   - **[Full bleed](https://www.google.com/design/spec/components/dividers.html#dividers-types-of-dividers) ✓**
   - **[Inset](https://www.google.com/design/spec/components/dividers.html#dividers-types-of-dividers) ✓**
 - [Expansion Panels](https://www.google.com/design/spec/components/expansion-panels.html)
-- [Grid lists](https://www.google.com/design/spec/components/grid-lists.html)
+- **[Grid lists](https://www.google.com/design/spec/components/grid-lists.html) ✓**
 - **[Lists](https://www.google.com/design/spec/components/lists.html) ✓**
   - **[Single line](https://www.google.com/design/spec/components/lists.html#lists-specs) ✓**
   - **[Two line](https://www.google.com/design/spec/components/lists.html#lists-specs) ✓**
@@ -68,7 +68,7 @@ to discuss the approach before submitting a PR.
   - [Leave-behinds](https://www.google.com/design/spec/components/lists-controls.html#lists-controls-types-of-list-controls)
 - **[Menus](https://www.google.com/design/spec/components/menus.html) ✓**
   - **[Button menu](https://www.google.com/design/spec/components/menus.html#menus-usage) (Can be constructed) ✓**
-  - [Scrollable](https://www.google.com/design/spec/components/menus.html#menus-usage)
+  - **[Scrollable](https://www.google.com/design/spec/components/menus.html#menus-usage) ✓**
   - [Cascade](https://www.google.com/design/spec/components/menus.html#menus-usage)
   - [Textfield dropdown](https://www.google.com/design/spec/components/menus.html#menus-behavior) (DropDownMenu)
   - [Contextual / App bar dropdown](https://www.google.com/design/spec/components/menus.html#menus-usage) (IconMenu)
@@ -88,7 +88,7 @@ to discuss the approach before submitting a PR.
 - [Sliders](https://www.google.com/design/spec/components/sliders.html)
   - [Continuous](https://www.google.com/design/spec/components/sliders.html#sliders-continuous-slider)
   - [Discrete](https://www.google.com/design/spec/components/sliders.html#sliders-discrete-slider)
-- [Snackbars](https://www.google.com/design/spec/components/snackbars-toasts.html)
+- **[Snackbars](https://www.google.com/design/spec/components/snackbars-toasts.html) ✓**
 - **[Subheaders](https://www.google.com/design/spec/components/subheaders.html) ✓**
   - **[List](https://www.google.com/design/spec/components/subheaders.html#subheaders-list-subheaders) ✓**
   - [Grid](https://www.google.com/design/spec/components/subheaders.html#subheaders-list-subheaders)
@@ -112,13 +112,13 @@ to discuss the approach before submitting a PR.
 - **[Text fields](https://www.google.com/design/spec/components/text-fields.html) ✓**
   - **[Single-line](https://www.google.com/design/spec/components/text-fields.html#text-fields-single-line-text-field) ✓**
   - [Multi-line](https://www.google.com/design/spec/components/text-fields.html#text-fields-multi-line-text-field)
-  - [Full-width](https://www.google.com/design/spec/components/text-fields.html#text-fields-multi-line-text-field)
+  - **[Full-width](https://www.google.com/design/spec/components/text-fields.html#text-fields-multi-line-text-field) ✓**
   - [Character counter](https://www.google.com/design/spec/components/text-fields.html#text-fields-character-counter)
-  - [Auto-complete](https://www.google.com/design/spec/components/text-fields.html#text-fields-auto-complete-text-field)
+  - **[Autocomplete](https://www.google.com/design/spec/components/text-fields.html#text-fields-auto-complete-text-field) (Can be done with external library such as [react-autosuggest](https://github.com/moroshko/react-autosuggest)) ✓**
   - [Search filter](https://www.google.com/design/spec/components/text-fields.html#text-fields-search-filter)
   - [Password](https://www.google.com/design/spec/components/text-fields.html#text-fields-password-input)
-- [Toolbars](https://www.google.com/design/spec/components/toolbars.html)
-- [Tooltips](https://www.google.com/design/spec/components/tooltips.html) (IconButton & TableHeader only)
+- **[Toolbars](https://www.google.com/design/spec/components/toolbars.html) ✓**
+- [Tooltips](https://www.google.com/design/spec/components/tooltips.html)
   - [Desktop](https://www.google.com/design/spec/components/tooltips.html#tooltips-tooltips-desktop-)
   - [Mobile](https://www.google.com/design/spec/components/tooltips.html#tooltips-tooltips-mobile-)
 - [Widgets](https://material.io/guidelines/components/widgets.html)

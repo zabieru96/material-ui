@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import Drawer, { styleSheet } from './Drawer';
+import { createShallow, getClasses } from '../test-utils';
 import Slide from '../transitions/Slide';
 import Modal from '../internal/Modal';
 import Paper from '../Paper';
+import Drawer from './Drawer';
 
 describe('<Drawer />', () => {
   let shallow;
@@ -14,7 +14,7 @@ describe('<Drawer />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<Drawer />);
   });
 
   it('should render a Modal', () => {
@@ -88,13 +88,13 @@ describe('<Drawer />', () => {
 
   it('should set the Paper className', () => {
     const wrapper = shallow(
-      <Drawer classes={{ paper: 'woof' }}>
+      <Drawer classes={{ paper: 'woofDrawer' }}>
         <h1>Hello</h1>
       </Drawer>,
     );
     const paper = wrapper.find(Paper);
     assert.strictEqual(paper.hasClass(classes.paper), true, 'should have the paper class');
-    assert.strictEqual(paper.hasClass('woof'), true, 'should have the woof class');
+    assert.strictEqual(paper.hasClass('woofDrawer'), true, 'should have the woofDrawer class');
   });
 
   it('should be closed by default', () => {
@@ -199,14 +199,12 @@ describe('<Drawer />', () => {
     });
   });
 
-  describe('right-to-left', () => {
+  describe('Right To Left', () => {
     let wrapper;
 
     before(() => {
       wrapper = shallow(<Drawer />);
-      const styleManager = wrapper.context('styleManager');
-      styleManager.theme.dir = 'rtl';
-      wrapper.setContext({ styleManager });
+      wrapper.instance().props.theme.dir = 'rtl';
     });
 
     it('should switch left and right anchor when theme is right-to-left', () => {

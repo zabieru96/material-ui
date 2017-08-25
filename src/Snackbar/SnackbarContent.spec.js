@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import SnackbarContent, { styleSheet } from './SnackbarContent';
+import { createShallow, getClasses } from '../test-utils';
+import SnackbarContent from './SnackbarContent';
 
 describe('<SnackbarContent />', () => {
   let shallow;
@@ -11,13 +11,13 @@ describe('<SnackbarContent />', () => {
 
   before(() => {
     shallow = createShallow({ untilSelector: 'withStyles(Paper)' });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<SnackbarContent message="message" />);
   });
 
   it('should render a Paper with classes', () => {
     const wrapper = shallow(<SnackbarContent message="message" />);
     assert.strictEqual(wrapper.name(), 'Paper');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   describe('prop: action', () => {

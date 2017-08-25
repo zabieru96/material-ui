@@ -4,8 +4,8 @@ import React from 'react';
 import { spy, stub } from 'sinon';
 import { assert } from 'chai';
 import ReactDOM from 'react-dom';
-import { createShallow, createMount } from '../test-utils';
-import Menu, { styleSheet } from './Menu';
+import { createShallow, createMount, getClasses } from '../test-utils';
+import Menu from './Menu';
 
 describe('<Menu />', () => {
   let shallow;
@@ -13,7 +13,7 @@ describe('<Menu />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<Menu />);
   });
 
   it('should render a Popover', () => {

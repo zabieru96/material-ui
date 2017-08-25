@@ -1,10 +1,9 @@
 // @flow
 
-import React, { Component } from 'react';
+import React from 'react';
 import type { Element } from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
 import warning from 'warning';
 import keycode from 'keycode';
 import canUseDom from 'dom-helpers/util/inDOM';
@@ -26,7 +25,7 @@ import type { TransitionCallback } from './Transition';
  */
 const modalManager = createModalManager();
 
-export const styleSheet = createStyleSheet('MuiModal', theme => ({
+export const styles = (theme: Object) => ({
   root: {
     display: 'flex',
     width: '100%',
@@ -37,22 +36,17 @@ export const styleSheet = createStyleSheet('MuiModal', theme => ({
     left: 0,
   },
   hidden: {
-    pointerEvents: 'none',
+    visibility: 'hidden',
   },
-}));
+});
 
 type DefaultProps = {
   backdropComponent: Function,
-  backdropTransitionDuration: number,
-  backdropInvisible: boolean,
-  disableBackdrop: boolean,
-  ignoreBackdropClick: boolean,
-  ignoreEscapeKeyUp: boolean,
+  classes: Object,
   modalManager: Object,
-  show: boolean,
 };
 
-type Props = DefaultProps & {
+export type Props = {
   /**
    * The CSS class name of the backdrop element.
    */
@@ -66,17 +60,17 @@ type Props = DefaultProps & {
    */
   backdropInvisible?: boolean,
   /**
-   * Duration in ms for the backgrop transition.
+   * Duration in ms for the backdrop transition.
    */
   backdropTransitionDuration?: number,
   /**
-   * Content of the modal.
+   * A single child content element.
    */
   children?: Element<*>,
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
@@ -147,6 +141,8 @@ type Props = DefaultProps & {
   show?: boolean,
 };
 
+type AllProps = DefaultProps & Props;
+
 type State = {
   exited: boolean,
 };
@@ -154,13 +150,14 @@ type State = {
 /**
  * @ignore - internal component.
  */
-class Modal extends Component<DefaultProps, Props, State> {
-  props: Props;
+class Modal extends React.Component<AllProps, State> {
+  props: AllProps;
 
-  static defaultProps: DefaultProps = {
+  static defaultProps = {
     backdropComponent: Backdrop,
     backdropTransitionDuration: 300,
     backdropInvisible: false,
+    classes: {},
     keepMounted: false,
     disableBackdrop: false,
     ignoreBackdropClick: false,
@@ -169,7 +166,7 @@ class Modal extends Component<DefaultProps, Props, State> {
     show: false,
   };
 
-  state: State = {
+  state = {
     exited: false,
   };
 
@@ -236,7 +233,7 @@ class Modal extends Component<DefaultProps, Props, State> {
         modalContent.setAttribute('tabIndex', -1);
         warning(
           false,
-          'Material-UI: The modal content node does not accept focus. ' +
+          'Material-UI: the modal content node does not accept focus. ' +
             'For the benefit of assistive technologies, ' +
             'the tabIndex of the node is being set to "-1".',
         );
@@ -405,6 +402,7 @@ class Modal extends Component<DefaultProps, Props, State> {
 
     let backdropProps;
 
+    // It's a Transition like component
     if (modalChild.props.hasOwnProperty('in')) {
       Object.keys(transitionCallbacks).forEach(key => {
         childProps[key] = createChainedFunction(transitionCallbacks[key], modalChild.props[key]);
@@ -421,13 +419,13 @@ class Modal extends Component<DefaultProps, Props, State> {
       <Portal
         open
         ref={node => {
-          this.mountNode = node ? node.getLayer() : node;
+          this.mountNode = node ? node.getLayer() : null;
         }}
       >
         <div
           data-mui-test="Modal"
           className={classNames(classes.root, className, {
-            [classes.hidden]: !show,
+            [classes.hidden]: this.state.exited,
           })}
           ref={node => {
             this.modal = node;
@@ -444,4 +442,4 @@ class Modal extends Component<DefaultProps, Props, State> {
   }
 }
 
-export default withStyles(styleSheet)(Modal);
+export default withStyles(styles, { name: 'MuiModal' })(Modal);

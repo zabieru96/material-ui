@@ -1,12 +1,12 @@
 // @flow weak
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
-import customPropTypes from 'material-ui/utils/customPropTypes';
+import { withStyles } from 'material-ui/styles';
 import Input from 'material-ui/Input/Input';
 
-const styleSheet = createStyleSheet('Inputs', () => ({
+const styles = {
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -18,13 +18,9 @@ const styleSheet = createStyleSheet('Inputs', () => ({
   large: {
     width: 300,
   },
-}));
+};
 
-export default class Inputs extends Component {
-  static contextTypes = {
-    styleManager: customPropTypes.muiRequired,
-  };
-
+class Inputs extends Component<$FlowFixMeProps> {
   componentDidMount() {
     this.focusInput.focus();
   }
@@ -32,7 +28,7 @@ export default class Inputs extends Component {
   focusInput = null;
 
   render() {
-    const classes = this.context.styleManager.render(styleSheet);
+    const { classes } = this.props;
 
     return (
       <div>
@@ -54,3 +50,9 @@ export default class Inputs extends Component {
     );
   }
 }
+
+Inputs.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Inputs);

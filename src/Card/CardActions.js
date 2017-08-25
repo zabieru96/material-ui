@@ -1,13 +1,12 @@
 // @flow
 
 import React from 'react';
-import type { Element } from 'react';
+import type { Node } from 'react';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
 import { cloneChildrenWithClassName } from '../utils/reactHelpers';
 
-export const styleSheet = createStyleSheet('MuiCardActions', {
+export const styles = {
   root: {
     height: 52,
     display: 'flex',
@@ -17,21 +16,22 @@ export const styleSheet = createStyleSheet('MuiCardActions', {
   actionSpacing: {
     margin: '0 4px',
   },
-});
+};
 
 type DefaultProps = {
+  classes: Object,
   disableActionSpacing: boolean,
 };
 
-type Props = DefaultProps & {
+export type Props = {
   /**
    * The content of the component.
    */
-  children?: Element<*>,
+  children?: Node,
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
@@ -42,7 +42,9 @@ type Props = DefaultProps & {
   disableActionSpacing?: boolean,
 };
 
-function CardActions(props: Props) {
+type AllProps = DefaultProps & Props;
+
+function CardActions(props: AllProps) {
   const { disableActionSpacing, children, classes, className, ...other } = props;
 
   return (
@@ -58,4 +60,4 @@ CardActions.defaultProps = {
   disableActionSpacing: false,
 };
 
-export default withStyles(styleSheet)(CardActions);
+export default withStyles(styles, { name: 'MuiCardActions' })(CardActions);

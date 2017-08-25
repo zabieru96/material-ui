@@ -3,7 +3,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
 
 const THICKNESS = 3.6;
@@ -14,10 +13,15 @@ function getRelativeValue(value, min, max) {
   return (clampedValue - min) / (max - min);
 }
 
-export const styleSheet = createStyleSheet('MuiCircularProgress', theme => ({
+export const styles = (theme: Object) => ({
   root: {
     display: 'inline-block',
+  },
+  primaryColor: {
     color: theme.palette.primary[500],
+  },
+  accentColor: {
+    color: theme.palette.secondary.A200,
   },
   svg: {
     transform: 'rotate(-90deg)',
@@ -64,10 +68,10 @@ export const styleSheet = createStyleSheet('MuiCircularProgress', theme => ({
       strokeDashoffset: `calc((99% - ${THICKNESS}px) * -${PI})`,
     },
   },
-}));
+});
 
 function CircularProgress(props) {
-  const { classes, className, size, mode, value, min, max, ...other } = props;
+  const { classes, className, color, size, mode, value, min, max, ...other } = props;
   const radius = size / 2;
   const rootProps = {};
   const svgClasses = classNames(classes.svg, {
@@ -90,9 +94,11 @@ function CircularProgress(props) {
     rootProps['aria-valuemax'] = max;
   }
 
+  const colorClass = classes[`${color}Color`];
+
   return (
     <div
-      className={classNames(classes.root, className)}
+      className={classNames(classes.root, colorClass, className)}
       style={{ width: size, height: size }}
       role="progressbar"
       {...rootProps}
@@ -124,6 +130,10 @@ CircularProgress.propTypes = {
    */
   className: PropTypes.string,
   /**
+   * The color of the component. It's using the theme palette when that makes sense.
+   */
+  color: PropTypes.oneOf(['primary', 'accent']),
+  /**
    * The max value of progress in determinate mode.
    */
   max: PropTypes.number,
@@ -148,6 +158,7 @@ CircularProgress.propTypes = {
 };
 
 CircularProgress.defaultProps = {
+  color: 'primary',
   size: 40,
   mode: 'indeterminate',
   value: 0,
@@ -155,4 +166,4 @@ CircularProgress.defaultProps = {
   max: 100,
 };
 
-export default withStyles(styleSheet)(CircularProgress);
+export default withStyles(styles, { name: 'MuiCircularProgress' })(CircularProgress);

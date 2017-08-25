@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import CardActions, { styleSheet } from './CardActions';
+import { createShallow, getClasses } from '../test-utils';
+import CardActions from './CardActions';
 
 describe('<CardActions />', () => {
   let shallow;
@@ -11,13 +11,13 @@ describe('<CardActions />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<CardActions />);
   });
 
   it('should render a div with the root class', () => {
     const wrapper = shallow(<CardActions />);
     assert.strictEqual(wrapper.name(), 'div');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   it('should pass the actionSpacing class to children', () => {

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import TabIndicator, { styleSheet } from './TabIndicator';
+import { createShallow, getClasses } from '../test-utils';
+import TabIndicator from './TabIndicator';
 
 describe('<TabIndicator />', () => {
   let shallow;
@@ -11,13 +11,13 @@ describe('<TabIndicator />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<TabIndicator color="accent" style={{}} />);
   });
 
   it('should render with the root class', () => {
     const wrapper = shallow(<TabIndicator color="accent" style={{}} />);
     assert.strictEqual(wrapper.name(), 'div');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   describe('prop: style', () => {

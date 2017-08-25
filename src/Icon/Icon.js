@@ -1,18 +1,17 @@
 // @flow
 
 import React from 'react';
-import type { Element } from 'react';
+import type { Node } from 'react';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
-import { capitalizeFirstLetter } from '../utils/helpers';
 import withStyles from '../styles/withStyles';
+import { capitalizeFirstLetter } from '../utils/helpers';
 
-export const styleSheet = createStyleSheet('MuiIcon', theme => ({
+export const styles = (theme: Object) => ({
   root: {
     userSelect: 'none',
   },
   colorAccent: {
-    color: theme.palette.accent.A200,
+    color: theme.palette.secondary.A200,
   },
   colorAction: {
     color: theme.palette.action.active,
@@ -29,21 +28,22 @@ export const styleSheet = createStyleSheet('MuiIcon', theme => ({
   colorPrimary: {
     color: theme.palette.primary[500],
   },
-}));
+});
 
 type DefaultProps = {
+  classes: Object,
   color: 'inherit',
 };
 
-type Props = DefaultProps & {
+export type Props = {
   /**
    * The name of the icon font ligature.
    */
-  children?: Element<*>,
+  children?: Node,
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
@@ -54,7 +54,9 @@ type Props = DefaultProps & {
   color?: 'inherit' | 'accent' | 'action' | 'contrast' | 'disabled' | 'error' | 'primary',
 };
 
-function Icon(props: Props) {
+type AllProps = DefaultProps & Props;
+
+function Icon(props: AllProps) {
   const { children, classes, className: classNameProp, color, ...other } = props;
 
   const className = classNames(
@@ -79,4 +81,4 @@ Icon.defaultProps = {
 
 Icon.muiName = 'Icon';
 
-export default withStyles(styleSheet)(Icon);
+export default withStyles(styles, { name: 'MuiIcon' })(Icon);

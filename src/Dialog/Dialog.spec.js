@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import Dialog, { styleSheet } from './Dialog';
+import { createShallow, getClasses } from '../test-utils';
 import Paper from '../Paper';
+import Fade from '../transitions/Fade';
+import Dialog from './Dialog';
 
 describe('<Dialog />', () => {
   let shallow;
@@ -12,7 +13,7 @@ describe('<Dialog />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<Dialog />);
   });
 
   it('should render a Modal', () => {
@@ -55,13 +56,17 @@ describe('<Dialog />', () => {
   });
 
   it('should spread custom props on the paper (dialog "root") node', () => {
-    const wrapper = shallow(<Dialog data-my-prop="woof" />);
-    assert.strictEqual(wrapper.prop('data-my-prop'), 'woof', 'custom prop should be woof');
+    const wrapper = shallow(<Dialog data-my-prop="woofDialog" />);
+    assert.strictEqual(
+      wrapper.prop('data-my-prop'),
+      'woofDialog',
+      'custom prop should be woofDialog',
+    );
   });
 
   it('should render with the user classes on the root node', () => {
-    const wrapper = shallow(<Dialog className="woof" />);
-    assert.strictEqual(wrapper.hasClass('woof'), true, 'should have the "woof" class');
+    const wrapper = shallow(<Dialog className="woofDialog" />);
+    assert.strictEqual(wrapper.hasClass('woofDialog'), true);
   });
 
   it('should render Fade > Paper > children inside the Modal', () => {
@@ -73,11 +78,7 @@ describe('<Dialog />', () => {
     );
 
     const fade = wrapper.childAt(0);
-    assert.strictEqual(
-      fade.length === 1 && fade.is('Fade'),
-      true,
-      'immediate wrapper child should be Fade',
-    );
+    assert.strictEqual(fade.name(), 'withTheme(Fade)', 'immediate wrapper child should be Fade');
 
     const paper = fade.childAt(0);
     assert.strictEqual(paper.length === 1 && paper.name(), 'withStyles(Paper)');
@@ -88,19 +89,19 @@ describe('<Dialog />', () => {
   it('should not be open by default', () => {
     const wrapper = shallow(<Dialog />);
     assert.strictEqual(wrapper.props().show, false, 'should pass show=false to the Modal');
-    assert.strictEqual(wrapper.find('Fade').props().in, false, 'should pass in=false to the Fade');
+    assert.strictEqual(wrapper.find(Fade).props().in, false, 'should pass in=false to the Fade');
   });
 
   it('should be open by default', () => {
     const wrapper = shallow(<Dialog open />);
     assert.strictEqual(wrapper.props().show, true, 'should pass show=true to the Modal');
-    assert.strictEqual(wrapper.find('Fade').props().in, true, 'should pass in=true to the Fade');
+    assert.strictEqual(wrapper.find(Fade).props().in, true, 'should pass in=true to the Fade');
   });
 
   it('should fade down and make the transition appear on first mount', () => {
     const wrapper = shallow(<Dialog />);
     assert.strictEqual(
-      wrapper.find('Fade').prop('transitionAppear'),
+      wrapper.find(Fade).prop('transitionAppear'),
       true,
       'should pass transitionAppear=true to the Fade',
     );

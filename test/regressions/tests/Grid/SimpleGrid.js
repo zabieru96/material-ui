@@ -1,12 +1,12 @@
 // @flow weak
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
-import { createStyleSheet } from 'jss-theme-reactor';
-import customPropTypes from 'material-ui/utils/customPropTypes';
+import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 
-const styleSheet = createStyleSheet('SimpleGrid', () => ({
+const styles = {
   root: {
     width: 400,
   },
@@ -14,14 +14,14 @@ const styleSheet = createStyleSheet('SimpleGrid', () => ({
     padding: 16,
     textAlign: 'center',
   },
-}));
+};
 
-export default function SimpleGrid(props, context) {
-  const classes = context.styleManager.render(styleSheet);
+function SimpleGrid(props) {
+  const { classes } = props;
 
   return (
     <div className={classes.root}>
-      <Grid container gutter={24}>
+      <Grid container spacing={24}>
         <Grid item xs={12}>
           <Paper className={classes.paper}>xs=12</Paper>
         </Grid>
@@ -48,6 +48,8 @@ export default function SimpleGrid(props, context) {
   );
 }
 
-SimpleGrid.contextTypes = {
-  styleManager: customPropTypes.muiRequired,
+SimpleGrid.propTypes = {
+  classes: PropTypes.object.isRequired,
 };
+
+export default withStyles(styles)(SimpleGrid);

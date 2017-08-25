@@ -3,9 +3,9 @@
 import React from 'react';
 import { spy } from 'sinon';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
+import { createShallow, getClasses } from '../test-utils';
 import Input from '../Input';
-import FormControl, { styleSheet } from './FormControl';
+import FormControl from './FormControl';
 
 describe('<FormControl />', () => {
   let shallow;
@@ -13,24 +13,24 @@ describe('<FormControl />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<FormControl />);
   });
 
   describe('initial state', () => {
     it('should render a div with the root and user classes', () => {
-      const wrapper = shallow(<FormControl className="woof" />);
+      const wrapper = shallow(<FormControl className="woofFormControl" />);
 
       assert.strictEqual(wrapper.name(), 'div');
       assert.strictEqual(wrapper.hasClass(classes.root), true);
-      assert.strictEqual(wrapper.hasClass('woof'), true);
+      assert.strictEqual(wrapper.hasClass('woofFormControl'), true);
     });
 
     it('should have the focused class', () => {
-      const wrapper = shallow(<FormControl className="woof" />);
+      const wrapper = shallow(<FormControl className="woofFormControl" />);
 
       assert.strictEqual(wrapper.name(), 'div');
       assert.strictEqual(wrapper.hasClass(classes.root), true);
-      assert.strictEqual(wrapper.hasClass('woof'), true);
+      assert.strictEqual(wrapper.hasClass('woofFormControl'), true);
     });
 
     it('should have no margin', () => {

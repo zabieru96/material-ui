@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import Backdrop, { styleSheet } from './Backdrop';
+import { createShallow, getClasses } from '../test-utils';
+import Backdrop from './Backdrop';
 
 describe('<Backdrop />', () => {
   let shallow;
@@ -11,12 +11,12 @@ describe('<Backdrop />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<Backdrop />);
   });
 
   it('should render a backdrop div', () => {
-    const wrapper = shallow(<Backdrop className="woof" />);
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
-    assert.strictEqual(wrapper.hasClass('woof'), true, 'should have the woof class');
+    const wrapper = shallow(<Backdrop className="woofBackdrop" />);
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
+    assert.strictEqual(wrapper.hasClass('woofBackdrop'), true);
   });
 });

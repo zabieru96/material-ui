@@ -3,10 +3,10 @@
 import React from 'react';
 import { assert } from 'chai';
 import { spy } from 'sinon';
-import { createShallow, createMount } from '../test-utils';
-import BottomNavigation, { styleSheet } from './BottomNavigation';
+import { createShallow, createMount, getClasses } from '../test-utils';
 import BottomNavigationButton from './BottomNavigationButton';
 import Icon from '../Icon';
+import BottomNavigation from './BottomNavigation';
 
 describe('<BottomNavigation />', () => {
   let shallow;
@@ -16,7 +16,11 @@ describe('<BottomNavigation />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(
+      <BottomNavigation showLabels value={0}>
+        <BottomNavigationButton icon={icon} />
+      </BottomNavigation>,
+    );
     mount = createMount();
   });
 
@@ -26,22 +30,22 @@ describe('<BottomNavigation />', () => {
 
   it('should render with the root class', () => {
     const wrapper = shallow(
-      <BottomNavigation showLabels>
+      <BottomNavigation showLabels value={0}>
         <BottomNavigationButton icon={icon} />
       </BottomNavigation>,
     );
     assert.strictEqual(wrapper.name(), 'div');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   it('should render with the user and root classes', () => {
     const wrapper = shallow(
-      <BottomNavigation showLabels className="woof">
+      <BottomNavigation showLabels value={0} className="woofBottomNavigation">
         <BottomNavigationButton icon={icon} />
       </BottomNavigation>,
     );
-    assert.strictEqual(wrapper.hasClass('woof'), true, 'should have the "woof" class');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass('woofBottomNavigation'), true);
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   it('should pass selected prop to children', () => {

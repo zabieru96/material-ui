@@ -60,7 +60,7 @@ describe('until', () => {
     );
   });
 
-  it('throws when iassert.strictEqual called on an empty wrapper', () => {
+  it('throws when assert.strictEqual called on an empty wrapper', () => {
     assert.throws(
       () => {
         until.call(shallow(<Div />).find('Foo'), 'div');
@@ -82,7 +82,7 @@ describe('until', () => {
   const Foo = () => <Div />;
   Foo.contextTypes = { quux: PropTypes.bool.isRequired };
 
-  class Bar extends React.Component {
+  class Bar extends React.Component<{}> {
     static childContextTypes = { quux: PropTypes.bool };
     getChildContext = () => ({ quux: true });
     render = () => <Foo />;

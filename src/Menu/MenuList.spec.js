@@ -24,11 +24,24 @@ describe('<MenuList />', () => {
     });
 
     it('should spread other props on the list', () => {
-      assert.strictEqual(wrapper.prop('data-test'), 'hi', 'should have the custom prop');
+      assert.strictEqual(wrapper.props()['data-test'], 'hi');
     });
 
     it('should have the user classes', () => {
-      assert.strictEqual(wrapper.hasClass('test-class'), true, 'should have the user class');
+      assert.strictEqual(wrapper.hasClass('test-class'), true);
+    });
+  });
+
+  describe('prop: children', () => {
+    it('should support invalid children', () => {
+      const wrapper = shallow(
+        <MenuList>
+          <div />
+          <div />
+          {null}
+        </MenuList>,
+      );
+      assert.strictEqual(wrapper.find('div').length, 2);
     });
   });
 });

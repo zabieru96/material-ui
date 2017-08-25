@@ -1,36 +1,41 @@
 // @flow weak
 
 import React from 'react';
-import type { Element } from 'react';
+import type { Node } from 'react';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
 
-export const styleSheet = createStyleSheet('MuiListItemSecondaryAction', theme => ({
+export const styles = (theme: Object) => ({
   root: {
     position: 'absolute',
     right: 4,
     top: '50%',
     marginTop: -theme.spacing.unit * 3,
   },
-}));
+});
 
-type Props = {
+type DefaultProps = {
+  classes: Object,
+};
+
+export type Props = {
   /**
    * The content of the component, normally an `IconButton` or selection control.
    */
-  children?: Element<*>,
+  children?: Node,
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
   className?: string,
 };
 
-function ListItemSecondaryAction(props: Props) {
+type AllProps = DefaultProps & Props;
+
+function ListItemSecondaryAction(props: AllProps) {
   const { children, classes, className } = props;
 
   return (
@@ -42,4 +47,4 @@ function ListItemSecondaryAction(props: Props) {
 
 ListItemSecondaryAction.muiName = 'ListItemSecondaryAction';
 
-export default withStyles(styleSheet)(ListItemSecondaryAction);
+export default withStyles(styles, { name: 'MuiListItemSecondaryAction' })(ListItemSecondaryAction);

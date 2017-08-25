@@ -4,9 +4,9 @@ import React from 'react';
 import { assert } from 'chai';
 import { spy, stub, useFakeTimers } from 'sinon';
 import scroll from 'scroll';
-import { createShallow, createMount } from '../test-utils';
+import { createShallow, createMount, getClasses } from '../test-utils';
 import consoleErrorMock from '../../test/utils/consoleErrorMock';
-import Tabs, { styleSheet } from './Tabs';
+import Tabs from './Tabs';
 import TabScrollButton from './TabScrollButton';
 import TabIndicator from './TabIndicator';
 import Tab from './Tab';
@@ -14,14 +14,13 @@ import Tab from './Tab';
 const noop = () => {};
 
 describe('<Tabs />', () => {
-  let shallowWithWidth;
   let mount;
+  let shallow;
   let classes;
 
   before(() => {
-    const shallow = createShallow({ dive: true });
-    shallowWithWidth = (node, options = {}) => shallow(node, options).dive().dive();
-    classes = shallow.context.styleManager.render(styleSheet);
+    shallow = createShallow({ untilSelector: 'Tabs' });
+    classes = getClasses(<Tabs />);
     mount = createMount();
   });
 
@@ -30,31 +29,31 @@ describe('<Tabs />', () => {
   });
 
   it('should render with the root class', () => {
-    const wrapper = shallowWithWidth(
-      <Tabs width="md" onChange={noop} index={0}>
+    const wrapper = shallow(
+      <Tabs width="md" onChange={noop} value={0}>
         <Tab />
       </Tabs>,
     );
     assert.strictEqual(wrapper.name(), 'div');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   describe('prop: className', () => {
     it('should render with the user and root classes', () => {
-      const wrapper = shallowWithWidth(
-        <Tabs width="md" onChange={noop} index={0} className="woof">
+      const wrapper = shallow(
+        <Tabs width="md" onChange={noop} value={0} className="woofTabs">
           <Tab />
         </Tabs>,
       );
-      assert.strictEqual(wrapper.hasClass('woof'), true, 'should have the "woof" class');
-      assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+      assert.strictEqual(wrapper.hasClass('woofTabs'), true);
+      assert.strictEqual(wrapper.hasClass(classes.root), true);
     });
   });
 
   describe('prop: centered', () => {
     it('should render with the centered class', () => {
-      const wrapper = shallowWithWidth(
-        <Tabs width="md" onChange={noop} index={0} centered>
+      const wrapper = shallow(
+        <Tabs width="md" onChange={noop} value={0} centered>
           <Tab />
         </Tabs>,
       );
@@ -64,11 +63,11 @@ describe('<Tabs />', () => {
     });
   });
 
-  describe('prop: index', () => {
+  describe('prop: value', () => {
     let wrapper;
     before(() => {
-      wrapper = shallowWithWidth(
-        <Tabs width="md" onChange={noop} index={1}>
+      wrapper = shallow(
+        <Tabs width="md" onChange={noop} value={1}>
           <Tab />
           <Tab />
         </Tabs>,
@@ -88,8 +87,8 @@ describe('<Tabs />', () => {
       assert.strictEqual(wrapper.find(Tab).at(1).props().selected, true, 'should have selected');
     });
 
-    it('should switch from the original index', () => {
-      wrapper.setProps({ index: 0 });
+    it('should switch from the original value', () => {
+      wrapper.setProps({ value: 0 });
       assert.strictEqual(
         wrapper.find(Tab).at(0).props().selected,
         true,
@@ -104,7 +103,7 @@ describe('<Tabs />', () => {
 
     it('should accept a false value', () => {
       const wrapper2 = mount(
-        <Tabs width="md" onChange={noop} index={false}>
+        <Tabs width="md" onChange={noop} value={false}>
           <Tab />
           <Tab />
         </Tabs>,
@@ -112,10 +111,10 @@ describe('<Tabs />', () => {
       assert.strictEqual(wrapper2.find(TabIndicator).props().style.width, 0);
     });
 
-    it('should warn when the index is invalid', () => {
+    it('should warn when the value is invalid', () => {
       consoleErrorMock.spy();
       mount(
-        <Tabs width="md" onChange={noop} index={2}>
+        <Tabs width="md" onChange={noop} value={2}>
           <Tab />
           <Tab />
         </Tabs>,
@@ -123,7 +122,7 @@ describe('<Tabs />', () => {
       assert.strictEqual(consoleErrorMock.callCount(), 2);
       assert.strictEqual(
         consoleErrorMock.args()[0][0],
-        'Warning: Material-UI: the index provided `2` is invalid',
+        'Warning: Material-UI: the value provided `2` is invalid',
       );
     });
   });
@@ -133,15 +132,15 @@ describe('<Tabs />', () => {
       const handleChange = spy();
       // use mount to ensure that click event on Tab can be fired
       const wrapper = mount(
-        <Tabs width="md" index={0} onChange={handleChange}>
+        <Tabs width="md" value={0} onChange={handleChange}>
           <Tab />
           <Tab />
         </Tabs>,
       );
       wrapper.find(Tab).at(1).simulate('click');
-      wrapper.setProps({ index: 1 });
+      wrapper.setProps({ value: 1 });
       assert.strictEqual(handleChange.callCount, 1, 'should have been called once');
-      assert.strictEqual(handleChange.args[0][1], 1, 'should have been called with index 1');
+      assert.strictEqual(handleChange.args[0][1], 1, 'should have been called with value 1');
       wrapper.unmount();
     });
   });
@@ -152,8 +151,8 @@ describe('<Tabs />', () => {
 
     before(() => {
       clock = useFakeTimers();
-      wrapper = shallowWithWidth(
-        <Tabs width="md" onChange={noop} index={0} scrollable>
+      wrapper = shallow(
+        <Tabs width="md" onChange={noop} value={0} scrollable>
           <Tab />
         </Tabs>,
       );
@@ -186,7 +185,7 @@ describe('<Tabs />', () => {
     it('should get a scrollbar size listener', () => {
       // use mount to ensure that handleScrollbarSizeChange gets covered
       const mountWrapper = mount(
-        <Tabs width="md" onChange={noop} index={0} scrollable>
+        <Tabs width="md" onChange={noop} value={0} scrollable>
           <Tab />
         </Tabs>,
       );
@@ -197,8 +196,8 @@ describe('<Tabs />', () => {
 
   describe('prop: !scrollable', () => {
     it('should not render with the scrollable class', () => {
-      const wrapper = shallowWithWidth(
-        <Tabs width="md" onChange={noop} index={0}>
+      const wrapper = shallow(
+        <Tabs width="md" onChange={noop} value={0}>
           <Tab />
         </Tabs>,
       );
@@ -221,8 +220,8 @@ describe('<Tabs />', () => {
     });
 
     it('should render scroll buttons', () => {
-      const wrapper = shallowWithWidth(
-        <Tabs width="md" onChange={noop} index={0} scrollable scrollButtons="on">
+      const wrapper = shallow(
+        <Tabs width="md" onChange={noop} value={0} scrollable scrollButtons="on">
           <Tab />
         </Tabs>,
       );
@@ -230,8 +229,8 @@ describe('<Tabs />', () => {
     });
 
     it('should render scroll buttons automatically', () => {
-      const wrapper = shallowWithWidth(
-        <Tabs width="md" onChange={noop} index={0} scrollable scrollButtons="auto">
+      const wrapper = shallow(
+        <Tabs width="md" onChange={noop} value={0} scrollable scrollButtons="auto">
           <Tab />
         </Tabs>,
       );
@@ -239,8 +238,8 @@ describe('<Tabs />', () => {
     });
 
     it('should should not render scroll buttons automatically', () => {
-      const wrapper = shallowWithWidth(
-        <Tabs width="sm" onChange={noop} index={0} scrollable scrollButtons="auto">
+      const wrapper = shallow(
+        <Tabs width="sm" onChange={noop} value={0} scrollable scrollButtons="auto">
           <Tab />
         </Tabs>,
       );
@@ -248,8 +247,8 @@ describe('<Tabs />', () => {
     });
 
     it('should handle window resize event', () => {
-      const wrapper = shallowWithWidth(
-        <Tabs width="md" onChange={noop} index={0} scrollable scrollButtons="on">
+      const wrapper = shallow(
+        <Tabs width="md" onChange={noop} value={0} scrollable scrollButtons="on">
           <Tab />
         </Tabs>,
       );
@@ -274,8 +273,8 @@ describe('<Tabs />', () => {
       let wrapper;
       let instance;
       before(() => {
-        wrapper = shallowWithWidth(
-          <Tabs width="md" onChange={noop} index={0} scrollable scrollButtons="on">
+        wrapper = shallow(
+          <Tabs width="md" onChange={noop} value={0} scrollable scrollButtons="on">
             <Tab />
           </Tabs>,
         );
@@ -336,8 +335,8 @@ describe('<Tabs />', () => {
       scrollWidth: 1000,
     };
     before(() => {
-      wrapper = shallowWithWidth(
-        <Tabs width="md" onChange={noop} index={0} scrollable scrollButtons={'on'}>
+      wrapper = shallow(
+        <Tabs width="md" onChange={noop} value={0} scrollable scrollButtons={'on'}>
           <Tab />
         </Tabs>,
       );
@@ -369,8 +368,8 @@ describe('<Tabs />', () => {
 
     before(() => {
       scrollStub = stub(scroll, 'left');
-      const wrapper = shallowWithWidth(
-        <Tabs width="md" onChange={noop} index={0} scrollable>
+      const wrapper = shallow(
+        <Tabs width="md" onChange={noop} value={0} scrollable>
           <Tab />
         </Tabs>,
       );

@@ -1,16 +1,15 @@
-// @flow weak
+// @flow
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
+import type { Node, Element } from 'react';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
-import customPropTypes from '../utils/customPropTypes';
+import withStyles from '../styles/withStyles';
 import IconButton from '../IconButton';
 import CheckBoxOutlineBlankIcon from '../svg-icons/check-box-outline-blank';
 import CheckBoxIcon from '../svg-icons/check-box';
 import Icon from '../Icon';
 
-export const styleSheet = createStyleSheet('MuiSwitchBase', {
+export const styles = {
   root: {
     display: 'inline-flex',
     alignItems: 'center',
@@ -27,24 +26,127 @@ export const styleSheet = createStyleSheet('MuiSwitchBase', {
     margin: 0,
     padding: 0,
   },
-});
+  default: {},
+  checked: {},
+  disabled: {},
+};
+
+type DefaultProps = {
+  classes: Object,
+};
+
+// NB: If changed, please update Checkbox, Switch and Radio
+// so that the API documentation is updated.
+export type Props = {
+  /**
+   * If `true`, the component is checked.
+   */
+  checked?: boolean | string,
+  /**
+   * The CSS class name of the root element when checked.
+   */
+  checkedClassName?: string,
+  /**
+   * The icon to display when the component is checked.
+   * If a string is provided, it will be used as a font ligature.
+   */
+  checkedIcon?: Element<*>,
+  /**
+   * Useful to extend the style applied to components.
+   */
+  classes?: Object,
+  /**
+   * @ignore
+   */
+  className?: string,
+  /**
+   * @ignore
+   */
+  defaultChecked?: boolean,
+  /**
+   * If `true`, the switch will be disabled.
+   */
+  disabled?: boolean,
+  /**
+   * The CSS class name of the root element when disabled.
+   */
+  disabledClassName?: string,
+  /**
+   * If `true`, the ripple effect will be disabled.
+   */
+  disableRipple?: boolean,
+  /**
+   * The icon to display when the component is unchecked.
+   * If a string is provided, it will be used as a font ligature.
+   */
+  icon?: Node,
+  /**
+   * If `true`, the component appears indeterminate.
+   */
+  indeterminate?: boolean,
+  /**
+   * The icon to display when the component is indeterminate.
+   * If a string is provided, it will be used as a font ligature.
+   */
+  indeterminateIcon?: Node,
+  /**
+   * Properties applied to the `input` element.
+   */
+  inputProps?: Object,
+  /**
+   * Use that property to pass a ref callback to the native input component.
+   */
+  inputRef?: Function,
+  /*
+   * @ignore
+   */
+  name?: string,
+  /**
+   * Callback fired when the state is changed.
+   *
+   * @param {object} event The event source of the callback
+   * @param {boolean} checked The `checked` value of the switch
+   */
+  onChange?: Function,
+  /**
+   * @ignore
+   */
+  tabIndex?: string,
+  /**
+   * The value of the component.
+   */
+  value?: string,
+};
+
+type AllProps = DefaultProps & Props;
+
+type State = {
+  checked?: boolean,
+};
+
+type Options = {
+  defaultIcon?: Element<*>,
+  defaultCheckedIcon?: Element<*>,
+  inputType?: string,
+};
 
 export default function createSwitch(
   {
     defaultIcon = <CheckBoxOutlineBlankIcon />,
     defaultCheckedIcon = <CheckBoxIcon />,
     inputType = 'checkbox',
-    styleSheet: switchStyleSheet,
-  } = {},
+  }: Options = {},
 ) {
   /**
    * @ignore - internal component.
    */
-  class SwitchBase extends Component {
+  class SwitchBase extends React.Component<AllProps, State> {
+    props: AllProps;
     static defaultProps = {
-      icon: defaultIcon,
       checkedIcon: defaultCheckedIcon,
+      classes: {},
       disableRipple: false,
+      icon: defaultIcon,
     };
 
     state = {};
@@ -87,6 +189,7 @@ export default function createSwitch(
     render() {
       const {
         checked: checkedProp,
+        classes,
         className: classNameProp,
         checkedClassName,
         checkedIcon,
@@ -103,14 +206,9 @@ export default function createSwitch(
       } = this.props;
 
       const checked = this.isControlled ? checkedProp : this.state.checked;
-      const classes = this.context.styleManager.render(styleSheet);
-      const switchClasses = switchStyleSheet
-        ? this.context.styleManager.render(switchStyleSheet)
-        : {};
-
-      const className = classNames(classes.root, switchClasses.default, classNameProp, {
-        [classNames(switchClasses.checked, checkedClassName)]: checked,
-        [classNames(switchClasses.disabled, disabledClassName)]: disabled,
+      const className = classNames(classes.root, classes.default, classNameProp, {
+        [classNames(classes.checked, checkedClassName)]: checked,
+        [classNames(classes.disabled, disabledClassName)]: disabled,
       });
 
       let icon = checked ? checkedIcon : iconProp;
@@ -159,81 +257,5 @@ export default function createSwitch(
     }
   }
 
-  /**
-   ** NB: If changed, please update Checkbox, Switch and Radio
-   ** so that the API documentation is updated.
-   **/
-  SwitchBase.propTypes = {
-    /**
-     * If `true`, the component appears selected.
-     */
-    checked: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-    /**
-     * The CSS class name of the root element when checked.
-     */
-    checkedClassName: PropTypes.string,
-    /**
-     * The icon to display when the component is checked.
-     * If a string is provided, it will be used as a font ligature.
-     */
-    checkedIcon: PropTypes.node,
-    /**
-     * @ignore
-     */
-    className: PropTypes.string,
-    /**
-     * @ignore
-     */
-    defaultChecked: PropTypes.bool,
-    /**
-     * If `true`, the switch will be disabled.
-     */
-    disabled: PropTypes.bool,
-    /**
-     * The CSS class name of the root element when disabled.
-     */
-    disabledClassName: PropTypes.string,
-    /**
-     * If `true`, the ripple will be disabled.
-     */
-    disableRipple: PropTypes.bool,
-    /**
-     * The icon to display when the component is unchecked.
-     * If a string is provided, it will be used as a font ligature.
-     */
-    icon: PropTypes.node,
-    /**
-     * Properties applied to the `input` element.
-     */
-    inputProps: PropTypes.object,
-    /**
-     * Use that property to pass a ref callback to the native input component.
-     */
-    inputRef: PropTypes.func,
-    /*
-     * @ignore
-     */
-    name: PropTypes.string,
-    /**
-     * Callback fired when the  is changed.
-     *
-     * @param {object} event The event source of the callback
-     * @param {boolean} checked The `checked` value of the switch
-     */
-    onChange: PropTypes.func,
-    /**
-     * @ignore
-     */
-    tabIndex: PropTypes.string,
-    /**
-     * The value of the component.
-     */
-    value: PropTypes.string,
-  };
-
-  SwitchBase.contextTypes = {
-    styleManager: customPropTypes.muiRequired,
-  };
-
-  return SwitchBase;
+  return withStyles(styles, { name: 'MuiSwitchBase' })(SwitchBase);
 }

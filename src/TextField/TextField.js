@@ -1,12 +1,13 @@
 // @flow
+// @inheritedComponent FormControl
 
 import React from 'react';
-import type { Element } from 'react';
+import type { Node } from 'react';
 import Input, { InputLabel } from '../Input';
 import FormControl from '../Form/FormControl';
 import FormHelperText from '../Form/FormHelperText';
 
-type Props = {
+export type Props = {
   /**
    * This property helps users to fill forms faster, especially on mobile devices.
    * The name can be confusion, it's more like an autofill.
@@ -45,7 +46,7 @@ type Props = {
   /**
    * The helper text content.
    */
-  helperText?: string | Element<*>,
+  helperText?: Node,
   /**
    * The CSS class name of the helper text element.
    */
@@ -81,7 +82,7 @@ type Props = {
   /**
    * The label content.
    */
-  label?: string | Element<*>,
+  label?: Node,
   /**
    * The CSS class name of the label element.
    */
@@ -108,7 +109,7 @@ type Props = {
    */
   rows?: string | number,
   /**
-   * Maxium number of rows to display when multiline option is set to true.
+   * Maximum number of rows to display when multiline option is set to true.
    */
   rowsMax?: string | number,
   /**
@@ -177,7 +178,7 @@ function TextField(props: Props) {
       {...other}
     >
       {label &&
-        <InputLabel className={labelClassName} {...InputLabelProps}>
+        <InputLabel htmlFor={id} className={labelClassName} {...InputLabelProps}>
           {label}
         </InputLabel>}
       <Input

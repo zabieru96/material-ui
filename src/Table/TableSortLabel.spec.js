@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import TableSortLabel, { styleSheet } from './TableSortLabel';
+import { createShallow, getClasses } from '../test-utils';
+import TableSortLabel from './TableSortLabel';
 
 describe('<TableSortLabel />', () => {
   let shallow;
@@ -11,7 +11,7 @@ describe('<TableSortLabel />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<TableSortLabel />);
   });
 
   it('should render TableSortLabel', () => {

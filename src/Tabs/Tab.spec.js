@@ -3,8 +3,8 @@
 import React from 'react';
 import { assert } from 'chai';
 import { spy, stub } from 'sinon';
-import { createShallow, createMount } from '../test-utils';
-import Tab, { styleSheet } from './Tab';
+import { createShallow, createMount, getClasses } from '../test-utils';
+import Tab from './Tab';
 import Icon from '../Icon';
 
 describe('<Tab />', () => {
@@ -16,7 +16,7 @@ describe('<Tab />', () => {
   before(() => {
     shallow = createShallow({ dive: true });
     mount = createMount();
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<Tab textColor="inherit" />);
   });
 
   after(() => {
@@ -25,15 +25,15 @@ describe('<Tab />', () => {
 
   it('should render with the root class', () => {
     const wrapper = shallow(<Tab textColor="inherit" />);
-    assert.strictEqual(wrapper.name(), 'ButtonBase');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.name(), 'withStyles(ButtonBase)');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   describe('prop: className', () => {
     it('should render with the user and root classes', () => {
-      const wrapper = shallow(<Tab textColor="inherit" className="woof" />);
-      assert.strictEqual(wrapper.hasClass('woof'), true, 'should have the "woof" class');
-      assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+      const wrapper = shallow(<Tab textColor="inherit" className="woofTab" />);
+      assert.strictEqual(wrapper.hasClass('woofTab'), true);
+      assert.strictEqual(wrapper.hasClass(classes.root), true);
     });
   });
 

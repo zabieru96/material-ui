@@ -1,19 +1,22 @@
 // @flow weak
 
-import React, { Component } from 'react';
+import React from 'react';
 import type { Element } from 'react';
 import Transition from '../internal/Transition';
 import { duration } from '../styles/transitions';
-import customPropTypes from '../utils/customPropTypes';
+import withTheme from '../styles/withTheme';
 import type { TransitionCallback } from '../internal/Transition';
 
 type DefaultProps = {
-  in: boolean,
   enterTransitionDuration: number,
   leaveTransitionDuration: number,
+  theme: Object,
 };
 
-type Props = DefaultProps & {
+export type Props = {
+  /**
+   * A single child content element.
+   */
   children?: Element<*>,
   /**
    * If `true`, the component will transition in.
@@ -51,15 +54,22 @@ type Props = DefaultProps & {
    * Callback fired when the component has exited.
    */
   onExited?: TransitionCallback, // eslint-disable-line react/sort-prop-types
+  /**
+   * @ignore
+   */
+  theme?: Object,
 };
 
-class Fade extends Component<DefaultProps, Props, void> {
-  props: Props;
+type AllProps = DefaultProps & Props;
 
-  static defaultProps: DefaultProps = {
+class Fade extends React.Component<AllProps, void> {
+  props: AllProps;
+
+  static defaultProps = {
     in: false,
     enterTransitionDuration: duration.enteringScreen,
     leaveTransitionDuration: duration.leavingScreen,
+    theme: {},
   };
 
   handleEnter = element => {
@@ -70,7 +80,7 @@ class Fade extends Component<DefaultProps, Props, void> {
   };
 
   handleEntering = element => {
-    const { transitions } = this.context.styleManager.theme;
+    const { transitions } = this.props.theme;
     element.style.transition = transitions.create('opacity', {
       duration: this.props.enterTransitionDuration,
     });
@@ -84,7 +94,7 @@ class Fade extends Component<DefaultProps, Props, void> {
   };
 
   handleExit = element => {
-    const { transitions } = this.context.styleManager.theme;
+    const { transitions } = this.props.theme;
     element.style.transition = transitions.create('opacity', {
       duration: this.props.leaveTransitionDuration,
     });
@@ -105,6 +115,7 @@ class Fade extends Component<DefaultProps, Props, void> {
       onEnter,
       onEntering,
       onExit,
+      theme,
       ...other
     } = this.props;
 
@@ -123,8 +134,4 @@ class Fade extends Component<DefaultProps, Props, void> {
   }
 }
 
-Fade.contextTypes = {
-  styleManager: customPropTypes.muiRequired,
-};
-
-export default Fade;
+export default withTheme(Fade);

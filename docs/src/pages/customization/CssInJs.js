@@ -1,12 +1,13 @@
-// @flow
+// @flow weak
 
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
+import Typography from 'material-ui/Typography';
 
 // 1. We define the styles.
-const styleSheet = createStyleSheet('MyLink', theme => ({
+const styles = theme => ({
   root: {
     color: 'inherit',
     textDecoration: 'inherit',
@@ -17,7 +18,7 @@ const styleSheet = createStyleSheet('MyLink', theme => ({
   primary: {
     color: theme.palette.primary[500],
   },
-}));
+});
 
 function MyLink(props) {
   const { children, classes, className, variant, ...other } = props;
@@ -46,11 +47,11 @@ MyLink.propTypes = {
 };
 
 // 2. We inject the styles.
-const MyLinkStyled = withStyles(styleSheet)(MyLink);
+const MyLinkStyled = withStyles(styles)(MyLink);
 
 export default function CssInJs() {
   return (
-    <div>
+    <Typography type="subheading">
       <MyLinkStyled href="#">
         {'MyLink'}
       </MyLinkStyled>
@@ -58,6 +59,6 @@ export default function CssInJs() {
       <MyLinkStyled href="#" variant="primary">
         {'primary'}
       </MyLinkStyled>
-    </div>
+    </Typography>
   );
 }

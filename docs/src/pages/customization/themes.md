@@ -5,7 +5,15 @@ It allows you to **customize all design aspects** of your project in order to me
 
 The theme specifies the darkness of the surfaces, level of shadow, appropriate opacity of ink elements, etc.
 To promote greater consistency between apps, light and dark themes are available to choose from.
-We are using [jss-theme-reactor](https://github.com/nathanmarks/jss-theme-reactor) under the hood.
+We are using [jss](https://github.com/cssinjs/jss) under the hood.
+
+## Theme provider
+
+You need to use the `<MuiThemeProvider />` component in order to inject a theme into your application. However, this is optional, Material-UI components come with a default theme.
+We rely on the context feature of React.
+
+Makes sure that `<MuiThemeProvider />` is a parent of the components you are trying to customize.
+You can learn more about it [reading the API section](#muithemeprovider).
 
 ## Configuration variables
 
@@ -20,7 +28,7 @@ A color intention is a mapping of a palette to a given intention within your app
 We expose the following color intentions:
 
 - primary - used to represent primary interface elements for a user.
-- accent - used to represent secondary interface elements for a user.
+- secondary - used to represent secondary interface elements for a user.
 - error - used to represent interface elements that the user should be careful of.
 
 The palette is using the hues prefixed with `A` (`A200`, etc.) for the accent color and the hues unprefixed for the other intentions.
@@ -34,7 +42,7 @@ If you want to learn more about color, you can check out [the color section](/st
 
 Too many type sizes and styles at once can wreck any layout.
 We use a **limited set of type sizes** that work well together along with the layout grid.
-Those sizes are used accros our components.
+Those sizes are used across our components.
 
 Have a look at the following example regarding changing the default values, like the font family.
 If you want to learn more about color, you can check out [the typography section](/style/typography).
@@ -50,7 +58,7 @@ You can make a theme dark by setting `type` to `dark`.
 ### The other variables
 
 We have tried to normalize the implementation by adding many more variables: typography, breakpoints, transitions, etc. You can see below what the theme object looks like with the default values.
-If you want to learn more, we suggesting having a look at [`material-ui/style/theme.js`](https://github.com/callemall/material-ui/blob/next/src/styles/theme.js).
+If you want to learn more, we suggesting having a look at [`material-ui/style/theme.js`](https://github.com/callemall/material-ui/blob/v1-beta/src/styles/theme.js).
 
 {{demo='pages/customization/ThemeDefault.js'}}
 
@@ -73,7 +81,7 @@ That's a really powerful feature.
 
 The list of these customization points for each component is documented under the **Component API** section.
 For instance, you can have a look at the [Button](/component-api/button#css-api).
-Alternatively, you can always have a look at the [implementation](https://github.com/callemall/material-ui/blob/next/src/Button/Button.js).
+Alternatively, you can always have a look at the [implementation](https://github.com/callemall/material-ui/blob/v1-beta/src/Button/Button.js).
 
 ## Accessing the theme in a component
 
@@ -82,31 +90,41 @@ Let's say you want to display the value of the primary color, you can use the `w
 
 {{demo='pages/customization/WithTheme.js'}}
 
+## Nesting the theme
+
+Our theming solution is very flexible, you can nest multiple theme providers.
+That can be really useful when dealing with different area of your application.
+
+{{demo='pages/customization/Nested.js'}}
+
 ## API
 
 ### `<MuiThemeProvider />`
 
-This component takes a `theme` and a `styleManager` as properties.
-It makes the `styleManager` available down the React tree thanks to React context, with the theme object as its property: `styleManager.theme`.
+This component takes a `theme` property.
+It makes the `theme` available down the React tree thanks to React context.
 This component should preferably be used at **the root of your component tree**.
 
 #### Examples
 
 ```jsx
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
+import createMuiTheme from 'material-ui/styles/theme';
 import { MuiThemeProvider } from 'material-ui/styles';
 import Root from './Root';
 
+const theme = createMuiTheme();
+
 function App() {
   return (
-    <MuiThemeProvider>
+    <MuiThemeProvider theme={theme}>
       <Root />
     </MuiThemeProvider>
   );
 }
 
-ReactDOM.render(<App />, document.querySelector('#app'));
+render(<App />, document.querySelector('#app'));
 ```
 
 ### `createMuiTheme(options) => theme`

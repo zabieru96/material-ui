@@ -1,13 +1,12 @@
 // @flow
 
 import React from 'react';
-import type { Element } from 'react';
+import type { ComponentType, Node } from 'react';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
-import { capitalizeFirstLetter } from '../utils/helpers';
 import withStyles from '../styles/withStyles';
+import { capitalizeFirstLetter } from '../utils/helpers';
 
-export const styleSheet = createStyleSheet('MuiTypography', theme => ({
+export const styles = (theme: Object) => ({
   root: {
     display: 'block',
     margin: 0,
@@ -53,9 +52,9 @@ export const styleSheet = createStyleSheet('MuiTypography', theme => ({
     color: theme.palette.text.secondary,
   },
   colorAccent: {
-    color: theme.palette.accent.A400,
+    color: theme.palette.secondary.A400,
   },
-}));
+});
 
 type Type =
   | 'display4'
@@ -70,13 +69,19 @@ type Type =
   | 'caption'
   | 'button';
 
-type Props = {
+type DefaultProps = {
+  classes: Object,
+  headlineMapping: { [key: Type]: string },
+  type: Type,
+};
+
+export type Props = {
   align?: 'inherit' | 'left' | 'center' | 'right' | 'justify',
-  children?: Element<*>,
+  children?: Node,
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
@@ -86,7 +91,7 @@ type Props = {
    * Either a string to use a DOM element or a component.
    * By default we map the type to a good default headline component.
    */
-  component?: string | Function,
+  component?: string | ComponentType<*>,
   /**
    * The color of the component. It's using the theme palette when that makes sense.
    */
@@ -100,7 +105,7 @@ type Props = {
    * For instance, h1 to h6. If you wish to change that mapping, you can provide your own.
    * Alternatively, you can use the `component` property.
    */
-  headlineMapping: { [key: Type]: string },
+  headlineMapping?: { [key: Type]: string },
   /**
    * If `true`, the text will not wrap, but instead will truncate with an ellipsis.
    */
@@ -115,7 +120,7 @@ type Props = {
   type?: Type,
 };
 
-function Typography(props: Props) {
+function Typography(props: DefaultProps & Props) {
   const {
     align,
     classes,
@@ -126,12 +131,9 @@ function Typography(props: Props) {
     headlineMapping,
     noWrap,
     paragraph,
-    type: typeProp,
+    type,
     ...other
   } = props;
-
-  // workaround: see https://github.com/facebook/flow/issues/1660#issuecomment-297775427
-  const type = typeProp || Typography.defaultProps.type;
 
   const className = classNames(
     classes.root,
@@ -171,4 +173,4 @@ Typography.defaultProps = {
   type: 'body1',
 };
 
-export default withStyles(styleSheet)(Typography);
+export default withStyles(styles, { name: 'MuiTypography' })(Typography);

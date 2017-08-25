@@ -1,14 +1,14 @@
 // @flow
 
-import React, { Component } from 'react';
-import type { Element } from 'react';
+import React from 'react';
+import type { ComponentType, Node } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
-import ButtonBase from '../internal/ButtonBase';
+import ButtonBase from '../ButtonBase';
+import { isMuiComponent } from '../utils/reactHelpers';
 
-export const styleSheet = createStyleSheet('MuiListItem', theme => ({
+export const styles = (theme: Object) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -51,18 +51,14 @@ export const styleSheet = createStyleSheet('MuiListItem', theme => ({
       },
     },
   },
-}));
+});
 
 type DefaultProps = {
-  button: boolean,
+  classes: Object,
   component: string,
-  dense: boolean,
-  disabled: false,
-  disableGutters: false,
-  divider: false,
 };
 
-type Props = DefaultProps & {
+export type Props = {
   /**
    * If `true`, the ListItem will be a button.
    */
@@ -70,11 +66,11 @@ type Props = DefaultProps & {
   /**
    * The content of the component.
    */
-  children?: Element<*>,
+  children?: Node,
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
@@ -83,7 +79,7 @@ type Props = DefaultProps & {
    * The component used for the root node.
    * Either a string to use a DOM element or a component.
    */
-  component?: string | Function,
+  component?: string | ComponentType<*>,
   /**
    * If `true`, compact vertical padding designed for keyboard and mouse input will be used.
    */
@@ -102,10 +98,13 @@ type Props = DefaultProps & {
   divider?: boolean,
 };
 
-class ListItem extends Component<DefaultProps, Props, void> {
-  props: Props;
-  static defaultProps: DefaultProps = {
+type AllProps = DefaultProps & Props;
+
+class ListItem extends React.Component<AllProps, void> {
+  props: AllProps;
+  static defaultProps = {
     button: false,
+    classes: {},
     component: 'li',
     dense: false,
     disabled: false,
@@ -135,9 +134,7 @@ class ListItem extends Component<DefaultProps, Props, void> {
     const isDense = dense || this.context.dense || false;
     const children = React.Children.toArray(childrenProp);
 
-    const hasAvatar = children.some(value => {
-      return value.type && value.type.muiName === 'ListItemAvatar';
-    });
+    const hasAvatar = children.some(value => isMuiComponent(value, 'ListItemAvatar'));
 
     const className = classNames(
       classes.root,
@@ -162,8 +159,7 @@ class ListItem extends Component<DefaultProps, Props, void> {
 
     if (
       children.length &&
-      children[children.length - 1].type &&
-      children[children.length - 1].type.muiName === 'ListItemSecondaryAction'
+      isMuiComponent(children[children.length - 1], 'ListItemSecondaryAction')
     ) {
       const secondaryAction = children.pop();
       return (
@@ -192,4 +188,4 @@ ListItem.childContextTypes = {
   dense: PropTypes.bool,
 };
 
-export default withStyles(styleSheet)(ListItem);
+export default withStyles(styles, { name: 'MuiListItem' })(ListItem);

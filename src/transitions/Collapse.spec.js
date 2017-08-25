@@ -1,10 +1,10 @@
-// @flow weak
+// @flow
 
 import React from 'react';
 import { assert } from 'chai';
 import { spy, stub } from 'sinon';
-import { createShallow, createMount } from '../test-utils';
-import Collapse, { styleSheet } from './Collapse';
+import { createShallow, createMount, getClasses } from '../test-utils';
+import Collapse from './Collapse';
 
 describe('<Collapse />', () => {
   let shallow;
@@ -12,7 +12,7 @@ describe('<Collapse />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<Collapse />);
   });
 
   it('should render a Transition', () => {
@@ -21,14 +21,10 @@ describe('<Collapse />', () => {
   });
 
   it('should render a container around the wrapper', () => {
-    const wrapper = shallow(<Collapse classes={{ container: 'woof' }} />);
+    const wrapper = shallow(<Collapse classes={{ container: 'woofCollapse1' }} />);
     assert.strictEqual(wrapper.childAt(0).is('div'), true, 'should be a div');
-    assert.strictEqual(
-      wrapper.childAt(0).hasClass(classes.container),
-      true,
-      'should have the container class',
-    );
-    assert.strictEqual(wrapper.childAt(0).hasClass('woof'), true, 'should have the user class');
+    assert.strictEqual(wrapper.childAt(0).hasClass(classes.container), true);
+    assert.strictEqual(wrapper.childAt(0).hasClass('woofCollapse1'), true);
   });
 
   it('should render a wrapper around the children', () => {
@@ -93,7 +89,7 @@ describe('<Collapse />', () => {
 
       before(() => {
         heightMock = 666;
-        element = { style: { height: heightMock } };
+        element = { style: { height: heightMock, transitionDuration: undefined } };
         instance.handleEntering(element);
       });
 
@@ -112,15 +108,20 @@ describe('<Collapse />', () => {
       });
 
       describe('transitionDuration', () => {
-        let styleManagerMock;
+        let theme;
         let transitionDurationMock;
+        let restore;
 
         before(() => {
-          styleManagerMock = wrapper.context('styleManager');
-          styleManagerMock.theme.transitions.getAutoHeightDuration = stub().returns('woof');
-          wrapper.setContext({ styleManager: styleManagerMock });
+          theme = instance.props.theme;
+          restore = theme.transitions.getAutoHeightDuration;
+          theme.transitions.getAutoHeightDuration = stub().returns('woofCollapseStub');
           wrapper.setProps({ transitionDuration: 'auto' });
           instance = wrapper.instance();
+        });
+
+        after(() => {
+          theme.transitions.getAutoHeightDuration = restore;
         });
 
         it('no wrapper', () => {
@@ -128,7 +129,7 @@ describe('<Collapse />', () => {
           instance.handleEntering(element);
           assert.strictEqual(
             element.style.transitionDuration,
-            `${styleManagerMock.theme.transitions.getAutoHeightDuration(0)}ms`,
+            `${theme.transitions.getAutoHeightDuration(0)}ms`,
           );
         });
 
@@ -138,7 +139,7 @@ describe('<Collapse />', () => {
           instance.handleEntering(element);
           assert.strictEqual(
             element.style.transitionDuration,
-            `${styleManagerMock.theme.transitions.getAutoHeightDuration(clientHeightMock)}ms`,
+            `${theme.transitions.getAutoHeightDuration(clientHeightMock)}ms`,
           );
         });
 
@@ -152,7 +153,7 @@ describe('<Collapse />', () => {
         });
 
         it('string should set transitionDuration to string', () => {
-          transitionDurationMock = 'woof';
+          transitionDurationMock = 'woofCollapseStub';
           wrapper.setProps({ transitionDuration: transitionDurationMock });
           instance = wrapper.instance();
           instance.handleEntering(element);
@@ -220,7 +221,7 @@ describe('<Collapse />', () => {
       let element;
 
       before(() => {
-        element = { style: { height: 666 } };
+        element = { style: { height: 666, transitionDuration: undefined } };
         instance.handleExiting(element);
       });
 
@@ -239,15 +240,20 @@ describe('<Collapse />', () => {
       });
 
       describe('transitionDuration', () => {
-        let styleManagerMock;
+        let theme;
         let transitionDurationMock;
+        let restore;
 
         before(() => {
-          styleManagerMock = wrapper.context('styleManager');
-          styleManagerMock.theme.transitions.getAutoHeightDuration = stub().returns('woof');
-          wrapper.setContext({ styleManager: styleManagerMock });
+          theme = instance.props.theme;
+          restore = theme.transitions.getAutoHeightDuration;
+          theme.transitions.getAutoHeightDuration = stub().returns('woofCollapseStub2');
           wrapper.setProps({ transitionDuration: 'auto' });
           instance = wrapper.instance();
+        });
+
+        after(() => {
+          theme.transitions.getAutoHeightDuration = restore;
         });
 
         it('no wrapper', () => {
@@ -255,7 +261,7 @@ describe('<Collapse />', () => {
           instance.handleExiting(element);
           assert.strictEqual(
             element.style.transitionDuration,
-            `${styleManagerMock.theme.transitions.getAutoHeightDuration(0)}ms`,
+            `${theme.transitions.getAutoHeightDuration(0)}ms`,
           );
         });
 
@@ -265,7 +271,7 @@ describe('<Collapse />', () => {
           instance.handleExiting(element);
           assert.strictEqual(
             element.style.transitionDuration,
-            `${styleManagerMock.theme.transitions.getAutoHeightDuration(clientHeightMock)}ms`,
+            `${theme.transitions.getAutoHeightDuration(clientHeightMock)}ms`,
           );
         });
 
@@ -279,7 +285,7 @@ describe('<Collapse />', () => {
         });
 
         it('string should set transitionDuration to string', () => {
-          transitionDurationMock = 'woof';
+          transitionDurationMock = 'woofCollapseStub2';
           wrapper.setProps({ transitionDuration: transitionDurationMock });
           instance = wrapper.instance();
           instance.handleExiting(element);
@@ -308,7 +314,7 @@ describe('<Collapse />', () => {
 
     before(() => {
       mount = createMount();
-      mountInstance = mount(<Collapse.Naked classes={classes} />).instance();
+      mountInstance = mount(<Collapse.Naked classes={{}} theme={{}} />).instance();
     });
 
     after(() => {

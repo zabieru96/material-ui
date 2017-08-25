@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import ListItemText, { styleSheet } from './ListItemText';
+import { createShallow, getClasses } from '../test-utils';
+import ListItemText from './ListItemText';
 
 describe('<ListItemText />', () => {
   let shallow;
@@ -11,25 +11,25 @@ describe('<ListItemText />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<ListItemText />);
   });
 
   it('should render a div', () => {
     const wrapper = shallow(<ListItemText />);
     assert.strictEqual(wrapper.name(), 'div');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   it('should render with the user and root classes', () => {
-    const wrapper = shallow(<ListItemText className="woof" />);
-    assert.strictEqual(wrapper.hasClass('woof'), true, 'should have the "woof" class');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    const wrapper = shallow(<ListItemText className="woofListItemText" />);
+    assert.strictEqual(wrapper.hasClass('woofListItemText'), true);
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   it('should render with inset class', () => {
     const wrapper = shallow(<ListItemText inset />);
     assert.strictEqual(wrapper.hasClass(classes.inset), true, 'should have the inset class');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   it('should render with no children', () => {

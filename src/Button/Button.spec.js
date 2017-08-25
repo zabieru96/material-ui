@@ -2,23 +2,23 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow, createRender } from '../test-utils';
-import Button, { styleSheet } from './Button';
+import { createShallow, createRender, getClasses } from '../test-utils';
+import Button from './Button';
 
 describe('<Button />', () => {
   let shallow;
-  let renderToString;
+  let render;
   let classes;
 
   before(() => {
     shallow = createShallow({ dive: true });
-    renderToString = createRender();
-    classes = shallow.context.styleManager.render(styleSheet);
+    render = createRender();
+    classes = getClasses(<Button>Hello World</Button>);
   });
 
   it('should render a <ButtonBase> element', () => {
     const wrapper = shallow(<Button>Hello World</Button>);
-    assert.strictEqual(wrapper.name(), 'ButtonBase');
+    assert.strictEqual(wrapper.name(), 'withStyles(ButtonBase)');
     assert.strictEqual(
       wrapper.props().type,
       'button',
@@ -28,7 +28,7 @@ describe('<Button />', () => {
 
   it('should render with the root class but no others', () => {
     const wrapper = shallow(<Button>Hello World</Button>);
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
     assert.strictEqual(wrapper.hasClass(classes.raised), false, 'should not have the raised class');
     assert.strictEqual(wrapper.hasClass(classes.fab), false, 'should not have the fab class');
     assert.strictEqual(
@@ -46,12 +46,12 @@ describe('<Button />', () => {
   it('should render the custom className and the root class', () => {
     const wrapper = shallow(<Button className="test-class-name">Hello World</Button>);
     assert.strictEqual(wrapper.is('.test-class-name'), true, 'should pass the test className');
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
   });
 
   it('should render a primary button', () => {
     const wrapper = shallow(<Button color="primary">Hello World</Button>);
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
     assert.strictEqual(wrapper.hasClass(classes.raised), false, 'should have the raised class');
     assert.strictEqual(wrapper.hasClass(classes.fab), false, 'should not have the fab class');
     assert.strictEqual(
@@ -68,7 +68,7 @@ describe('<Button />', () => {
 
   it('should render an accent button', () => {
     const wrapper = shallow(<Button color="accent">Hello World</Button>);
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
     assert.strictEqual(wrapper.hasClass(classes.raised), false, 'should have the raised class');
     assert.strictEqual(wrapper.hasClass(classes.fab), false, 'should not have the fab class');
     assert.strictEqual(
@@ -85,7 +85,7 @@ describe('<Button />', () => {
 
   it('should render a raised button', () => {
     const wrapper = shallow(<Button raised>Hello World</Button>);
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
     assert.strictEqual(wrapper.hasClass(classes.raised), true, 'should have the raised class');
     assert.strictEqual(wrapper.hasClass(classes.fab), false, 'should not have the fab class');
     assert.strictEqual(
@@ -106,7 +106,7 @@ describe('<Button />', () => {
         Hello World
       </Button>,
     );
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
     assert.strictEqual(wrapper.hasClass(classes.raised), true, 'should have the raised class');
     assert.strictEqual(wrapper.hasClass(classes.fab), false, 'should not have the fab class');
     assert.strictEqual(
@@ -127,7 +127,7 @@ describe('<Button />', () => {
         Hello World
       </Button>,
     );
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
     assert.strictEqual(wrapper.hasClass(classes.raised), true, 'should have the raised class');
     assert.strictEqual(wrapper.hasClass(classes.fab), false, 'should not have the fab class');
     assert.strictEqual(
@@ -144,7 +144,7 @@ describe('<Button />', () => {
 
   it('should render a floating action button', () => {
     const wrapper = shallow(<Button fab>Hello World</Button>);
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
     assert.strictEqual(wrapper.hasClass(classes.raised), true, 'should have the raised class');
     assert.strictEqual(wrapper.hasClass(classes.fab), true, 'should have the fab class');
     assert.strictEqual(
@@ -165,7 +165,7 @@ describe('<Button />', () => {
         Hello World
       </Button>,
     );
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
     assert.strictEqual(wrapper.hasClass(classes.raised), true, 'should have the raised class');
     assert.strictEqual(wrapper.hasClass(classes.fab), true, 'should have the fab class');
     assert.strictEqual(
@@ -186,7 +186,7 @@ describe('<Button />', () => {
         Hello World
       </Button>,
     );
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
     assert.strictEqual(wrapper.hasClass(classes.raised), true, 'should have the raised class');
     assert.strictEqual(wrapper.hasClass(classes.fab), true, 'should have the fab class');
     assert.strictEqual(
@@ -222,17 +222,13 @@ describe('<Button />', () => {
   });
 
   describe('server side', () => {
-    after(() => {
-      renderToString.cleanUp();
-    });
+    // Only run the test on node.
+    if (!/jsdom/.test(window.navigator.userAgent)) {
+      return;
+    }
 
     it('should server side render', () => {
-      // Only run the test on node.
-      if (!/jsdom/.test(window.navigator.userAgent)) {
-        return;
-      }
-
-      const markup = renderToString(<Button>Hello World</Button>);
+      const markup = render(<Button>Hello World</Button>);
       assert.strictEqual(markup.text(), 'Hello World');
     });
   });

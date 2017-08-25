@@ -1,16 +1,15 @@
 // @flow
 
+import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import Radio, { styleSheet } from './Radio';
+import { getClasses } from '../test-utils';
+import Radio from './Radio';
 
 describe('<Radio />', () => {
-  let shallow;
   let classes;
 
   before(() => {
-    shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<Radio />);
   });
 
   describe('styleSheet', () => {
@@ -23,7 +22,6 @@ describe('<Radio />', () => {
 
   describe('default Radio export', () => {
     it('should be a SwitchBase with the displayName set for debugging', () => {
-      assert.strictEqual(Radio.name, 'SwitchBase');
       assert.strictEqual(Radio.displayName, 'Radio');
     });
   });

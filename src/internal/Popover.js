@@ -1,17 +1,15 @@
 // @flow
 
-import React, { Component } from 'react';
-import type { Element } from 'react';
+import React from 'react';
+import type { Node } from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
 import contains from 'dom-helpers/query/contains';
 import debounce from 'lodash/debounce';
 import EventListener from 'react-event-listener';
 import withStyles from '../styles/withStyles';
-import customPropTypes from '../utils/customPropTypes';
 import Modal from './Modal';
-import Transition from './Transition';
+import Grow from '../transitions/Grow';
 import Paper from '../Paper';
 import type { TransitionCallback } from './Transition';
 
@@ -63,7 +61,7 @@ function getScrollParent(parent, child) {
   return scrollTop;
 }
 
-export const styleSheet = createStyleSheet('MuiPopover', {
+export const styles = {
   paper: {
     position: 'absolute',
     overflowY: 'auto',
@@ -72,7 +70,7 @@ export const styleSheet = createStyleSheet('MuiPopover', {
       outline: 'none',
     },
   },
-});
+};
 
 type Origin = {
   horizontal: 'left' | 'center' | 'right' | number,
@@ -80,15 +78,10 @@ type Origin = {
 };
 
 type DefaultProps = {
-  anchorOrigin: Origin,
-  modal: boolean,
-  open: boolean,
-  transformOrigin: Origin,
-  transitionDuration: 'auto',
-  elevation: number
+  classes: Object,
 };
 
-type Props = DefaultProps & {
+export type Props = {
   /**
    * This is the DOM element that will be used
    * to set the position of the popover.
@@ -96,7 +89,8 @@ type Props = DefaultProps & {
   anchorEl?: Object,
   /**
    * This is the point on the anchor where the popover's
-   * `targetOrigin` will attach to.
+   * `anchorEl` will attach to.
+   *
    * Options:
    * vertical: [top, center, bottom];
    * horizontal: [left, center, right].
@@ -105,11 +99,11 @@ type Props = DefaultProps & {
   /**
    * The content of the component.
    */
-  children?: Element<*>,
+  children?: Node,
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
@@ -187,19 +181,22 @@ type Props = DefaultProps & {
   /**
    * Set to 'auto' to automatically calculate transition time based on height
    */
-  transitionDuration: number | 'auto',
+  transitionDuration?: number | 'auto',
 };
+
+type AllProps = DefaultProps & Props;
 
 /**
  * @ignore - internal component.
  */
-class Popover extends Component<DefaultProps, Props, void> {
-  props: Props;
-  static defaultProps: DefaultProps = {
+class Popover extends React.Component<AllProps, void> {
+  props: AllProps;
+  static defaultProps = {
     anchorOrigin: {
       vertical: 'top',
       horizontal: 'left',
     },
+    classes: {},
     modal: true,
     open: false,
     transformOrigin: {
@@ -208,18 +205,12 @@ class Popover extends Component<DefaultProps, Props, void> {
     },
     transitionDuration: 'auto',
     elevation: 8,
-    id: "popover",
   };
-
-  static getScale(value) {
-    return `scale(${value}, ${value ** 2})`;
-  }
 
   componentWillUnmount = () => {
     this.handleResize.cancel();
   };
 
-  autoTransitionDuration = undefined;
   transitionEl = undefined;
 
   setPositioningStyles = (element: HTMLElement) => {
@@ -233,80 +224,17 @@ class Popover extends Component<DefaultProps, Props, void> {
   };
 
   handleEnter = (element: HTMLElement) => {
-    element.style.opacity = '0';
-    element.style.transform = Popover.getScale(0.75);
-
     if (this.props.onEnter) {
       this.props.onEnter(element);
     }
 
     this.setPositioningStyles(element);
-
-    let { transitionDuration } = this.props;
-    const { transitions } = this.context.styleManager.theme;
-
-    if (transitionDuration === 'auto') {
-      transitionDuration = transitions.getAutoHeightDuration(element.clientHeight);
-      this.autoTransitionDuration = transitionDuration;
-    }
-
-    element.style.transition = [
-      transitions.create('opacity', {
-        duration: transitionDuration,
-      }),
-      transitions.create('transform', {
-        duration: transitionDuration * 0.666,
-      }),
-    ].join(',');
-  };
-
-  handleEntering = (element: HTMLElement) => {
-    element.style.opacity = '1';
-    element.style.transform = Popover.getScale(1);
-
-    if (this.props.onEntering) {
-      this.props.onEntering(element);
-    }
-  };
-
-  handleExit = (element: HTMLElement) => {
-    let { transitionDuration } = this.props;
-    const { transitions } = this.context.styleManager.theme;
-
-    if (transitionDuration === 'auto') {
-      transitionDuration = transitions.getAutoHeightDuration(element.clientHeight);
-      this.autoTransitionDuration = transitionDuration;
-    }
-
-    element.style.transition = [
-      transitions.create('opacity', {
-        duration: transitionDuration,
-      }),
-      transitions.create('transform', {
-        duration: transitionDuration * 0.666,
-        delay: transitionDuration * 0.333,
-      }),
-    ].join(',');
-
-    element.style.opacity = '0';
-    element.style.transform = Popover.getScale(0.75);
-
-    if (this.props.onExit) {
-      this.props.onExit(element);
-    }
   };
 
   handleResize = debounce(() => {
     const element: any = ReactDOM.findDOMNode(this.transitionEl);
     this.setPositioningStyles(element);
   }, 166);
-
-  handleRequestTimeout = () => {
-    if (this.props.transitionDuration === 'auto') {
-      return (this.autoTransitionDuration || 0) + 20;
-    }
-    return this.props.transitionDuration + 20;
-  };
 
   marginThreshold = 16;
 
@@ -364,6 +292,7 @@ class Popover extends Component<DefaultProps, Props, void> {
 
   handleGetOffsetTop = getOffsetTop;
   handleGetOffsetLeft = getOffsetLeft;
+
   /**
    * Returns the top/left offset of the position
    * to attach to on the anchor element (or body if none is provided)
@@ -412,23 +341,6 @@ class Popover extends Component<DefaultProps, Props, void> {
     };
   }
 
-  reposition = () => {
-    if(this.props.open){
-
-      var element = document.getElementById(this.props.id);
-
-      const positioning = this.getPositioningStyle(element);
-
-      element.style.top = positioning.top;
-      element.style.left = positioning.left;
-      element.style.transformOrigin = positioning.transformOrigin;
-    }
-  };
-
-  componentDidMount() {
-    window.addEventListener("resize", this.reposition.bind(this));
-  }
-
   render() {
     const {
       children,
@@ -457,24 +369,26 @@ class Popover extends Component<DefaultProps, Props, void> {
       ...other
     } = this.props;
 
+    // FIXME: props API consistency problem? - `...other` not spread over the root
     return (
       <Modal show={open} backdropInvisible onRequestClose={onRequestClose}>
-        <Transition
+        <Grow
           in={open}
           enteredClassName={enteredClassName}
           enteringClassName={enteringClassName}
           exitedClassName={exitedClassName}
           exitingClassName={exitingClassName}
           onEnter={this.handleEnter}
-          onEntering={this.handleEntering}
+          onEntering={onEntering}
           onEntered={onEntered}
-          onExit={this.handleExit}
+          onExit={onExit}
           onExiting={onExiting}
           onExited={onExited}
           role={role}
-          onRequestTimeout={this.handleRequestTimeout}
           transitionAppear
-          ref={node => (this.transitionEl = node)}
+          rootRef={node => {
+            this.transitionEl = node;
+          }}
         >
           <Paper
             data-mui-test="Popover"
@@ -485,14 +399,10 @@ class Popover extends Component<DefaultProps, Props, void> {
             <EventListener target="window" onResize={this.handleResize} />
             {children}
           </Paper>
-        </Transition>
+        </Grow>
       </Modal>
     );
   }
 }
 
-Popover.contextTypes = {
-  styleManager: customPropTypes.muiRequired,
-};
-
-export default withStyles(styleSheet)(Popover);
+export default withStyles(styles, { name: 'MuiPopover' })(Popover);

@@ -1,13 +1,12 @@
 // @flow
 
-import React, { Component } from 'react';
-import type { Element } from 'react';
+import React from 'react';
+import type { ComponentType, Node } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
 
-export const styleSheet = createStyleSheet('MuiList', theme => ({
+export const styles = (theme: Object) => ({
   root: {
     flex: '1 1 auto',
     overflow: 'auto',
@@ -26,23 +25,22 @@ export const styleSheet = createStyleSheet('MuiList', theme => ({
   subheader: {
     paddingTop: 0,
   },
-}));
+});
 
 type DefaultProps = {
   component: string,
-  dense: boolean,
-  disablePadding: boolean,
+  classes: Object,
 };
 
-type Props = DefaultProps & {
+export type Props = {
   /**
    * The content of the component.
    */
-  children?: Element<*>,
+  children?: Node,
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
@@ -51,7 +49,7 @@ type Props = DefaultProps & {
    * The component used for the root node.
    * Either a string to use a DOM element or a component.
    */
-  component?: string | Function,
+  component?: string | ComponentType<*>,
   /**
    * If `true`, compact vertical padding designed for keyboard and mouse input will be used for
    * the list and list items. The property is available to descendant components as the
@@ -69,12 +67,15 @@ type Props = DefaultProps & {
   /**
    * The content of the component, normally `ListItem`.
    */
-  subheader?: Element<*>,
+  subheader?: Node,
 };
 
-class List extends Component<DefaultProps, Props, void> {
-  props: Props;
-  static defaultProps: DefaultProps = {
+type AllProps = DefaultProps & Props;
+
+class List extends React.Component<AllProps, void> {
+  props: AllProps;
+  static defaultProps = {
+    classes: {},
     component: 'ul',
     dense: false,
     disablePadding: false,
@@ -101,7 +102,7 @@ class List extends Component<DefaultProps, Props, void> {
     const className = classNames(
       classes.root,
       {
-        [classes.dense]: dense,
+        [classes.dense]: dense && !disablePadding,
         [classes.padding]: !disablePadding,
         [classes.subheader]: subheader,
       },
@@ -121,4 +122,4 @@ List.childContextTypes = {
   dense: PropTypes.bool,
 };
 
-export default withStyles(styleSheet)(List);
+export default withStyles(styles, { name: 'MuiList' })(List);

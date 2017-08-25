@@ -1,15 +1,15 @@
 // @flow
 
 import React from 'react';
-import type { Element } from 'react';
+import type { Node } from 'react';
 import HiddenJs from './HiddenJs';
 import type { Breakpoint } from '../styles/breakpoints';
 
-type Props = {
+export type Props = {
   /**
    * The content of the component.
    */
-  children?: Element<*>,
+  children?: Node,
   /**
    * @ignore
    */

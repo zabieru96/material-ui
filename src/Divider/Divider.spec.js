@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { assert } from 'chai';
-import { createShallow } from '../test-utils';
-import Divider, { styleSheet } from './Divider';
+import { createShallow, getClasses } from '../test-utils';
+import Divider from './Divider';
 
 describe('<Divider />', () => {
   let shallow;
@@ -11,7 +11,7 @@ describe('<Divider />', () => {
 
   before(() => {
     shallow = createShallow({ dive: true });
-    classes = shallow.context.styleManager.render(styleSheet);
+    classes = getClasses(<Divider />);
   });
 
   it('should render a hr', () => {
@@ -21,7 +21,7 @@ describe('<Divider />', () => {
 
   it('should render with the root and default class', () => {
     const wrapper = shallow(<Divider />);
-    assert.strictEqual(wrapper.hasClass(classes.root), true, 'should have the root class');
+    assert.strictEqual(wrapper.hasClass(classes.root), true);
     assert.strictEqual(wrapper.hasClass(classes.default), true, 'should have the default class');
   });
 
@@ -32,7 +32,7 @@ describe('<Divider />', () => {
 
   it('should set the inset class', () => {
     const wrapper = shallow(<Divider inset />);
-    assert.strictEqual(wrapper.hasClass(classes.inset), true, 'should have inset cass');
+    assert.strictEqual(wrapper.hasClass(classes.inset), true, 'should have inset class');
   });
 
   it('should set the light class', () => {
