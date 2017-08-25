@@ -1,11 +1,10 @@
-/**
- * Created by zabieru on 7/11/2017.
- */
+// @flow
+
 import React from 'react';
 import classNames from 'classnames';
 import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
-import Avatar from '../Avatar/Avatar'
+import Avatar from '../Avatar/Avatar';
 
 export const styleSheet = createStyleSheet('MuiAvatarGroup', {
   root: {
@@ -14,35 +13,38 @@ export const styleSheet = createStyleSheet('MuiAvatarGroup', {
   avatar: {
     height: 15,
     width: 15,
-    display: 'inline-block'
-  }
+    display: 'inline-block',
+  },
 });
-
-//Check that there are atleast 2 children
 
 type Props = {
   /**
    * Used to pass Avatars.
    */
-  children: array
-}
+  children: array,
+  /**
+   * Useful to extend the style applied to components.
+   */
+  classes: Object,
+};
 
 function AvatarGroup(props: Props) {
-  const {children, classes} = props;
+  const { classes } = props;
 
   const content = React.Children.map(props.children, child => {
-    if (child.type === Avatar)
+    if (child.type === Avatar) {
       return React.cloneElement(child, {
-        className: classNames(classes.avatar)
-      })
-  })
+        className: classNames(classes.avatar),
+      });
+    }
+    return null;
+  });
 
-  return(
+  return (
     <div className={classNames(classes.root)}>
       {content}
     </div>
-  )
-
+  );
 }
 
 export default withStyles(styleSheet)(AvatarGroup);

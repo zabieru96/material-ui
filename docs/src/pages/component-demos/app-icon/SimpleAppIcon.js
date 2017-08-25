@@ -1,10 +1,9 @@
-/**
- * Created by zabieru on 7/9/2017.
- */
+// @flow
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles, createStyleSheet } from 'material-ui/styles';
-import AppIcon, {AppAction, AvatarGroup} from 'material-ui/AppIcon';
+import AppIcon, { AppAction, AvatarGroup } from 'material-ui/AppIcon';
 import BookmarkIcon from 'material-ui-icons/Bookmark';
 import BookIcon from 'material-ui-icons/Book';
 import MessageIcon from 'material-ui-icons/Message';
@@ -22,74 +21,75 @@ const styleSheet = createStyleSheet('ImageAvatars', {
     display: 'flex',
     justifyContent: 'center',
   },
-  avatar:{
+  avatar: {
     marginLeft: 10,
-  }
+  },
 });
 
-class SimpleAppIcon extends Component{
-
-  action1 = () => {
+class SimpleAppIcon extends Component {
+  handleAction1 = () => {
     alert('Action 1 clicked!');
   };
 
-  action2 = () => {
+  handleAction2 = () => {
     alert('Action 2 clicked!');
   };
 
-  action3 = () => {
+  handleAction3 = () => {
     alert('Action 3 clicked!');
   };
 
-  action4 = () => {
+  handleAction4 = () => {
     alert('Action 4 clicked!');
   };
 
-  render(){
+  render() {
     const classes = this.props.classes;
 
-    let avatar = (
-      <Avatar alt="Remy Sharp" src={remyImage}/>
-    )
+    const avatar = <Avatar alt="Remy Sharp" src={remyImage} />;
 
-    let avatarGroup = (
+    const avatarGroup = (
       <AvatarGroup>
         {avatar}
-        <Avatar alt="Remy Sharp" src={uxecoImage}/>
-        <Avatar alt="Remy Sharp" src={paella}/>
-        <Avatar alt="Remy Sharp" src={reptile}/>
+        <Avatar alt="Remy Sharp" src={uxecoImage} />
+        <Avatar alt="Remy Sharp" src={paella} />
+        <Avatar alt="Remy Sharp" src={reptile} />
       </AvatarGroup>
-    )
+    );
 
     return (
       <div className={classes.row}>
-        <AppIcon icon={ <BookmarkIcon/> }>
-          <AppAction icon={<BookIcon/>} label="Google" href="https://www.google.com"/>
-          <AppAction icon={<BookIcon/>} label="FaceBook" href="https://www.facebook.com"/>
-          <AppAction icon={<BookIcon/>} label="YouTube" href="https://www.youtube.com"/>
-          <AppAction icon={<BookIcon/>} label="Tumblr" href="https://www.tumblr.com"/>
+        <AppIcon icon={<BookmarkIcon />}>
+          <AppAction icon={<BookIcon />} label="Google" href="https://www.google.com" />
+          <AppAction icon={<BookIcon />} label="FaceBook" href="https://www.facebook.com" />
+          <AppAction icon={<BookIcon />} label="YouTube" href="https://www.youtube.com" />
+          <AppAction icon={<BookIcon />} label="Tumblr" href="https://www.tumblr.com" />
         </AppIcon>
 
         <div className={classes.avatar}>
           <AppIcon icon={avatar}>
-            <AppAction icon={<MessageIcon/>} label="Message" onClick={this.action1}/>
-            <AppAction icon={<CallIcon/>} label="Call" onClick={this.action2}/>
-            <AppAction icon={<VideoCallIcon/>} label="Video Call" onClick={this.action3}/>
-            <AppAction icon={<StarIcon/>} label="Favorite" onClick={this.action4}/>
+            <AppAction icon={<MessageIcon />} label="Message" onClick={this.handleAction1} />
+            <AppAction icon={<CallIcon />} label="Call" onClick={this.handleAction2} />
+            <AppAction icon={<VideoCallIcon />} label="Video Call" onClick={this.handleAction3} />
+            <AppAction icon={<StarIcon />} label="Favorite" onClick={this.handleAction4} />
           </AppIcon>
         </div>
 
         <div className={classes.avatar}>
           <AppIcon icon={avatarGroup}>
-            <AppAction icon={<MessageIcon/>} label="Message" onClick={this.action1}/>
-            <AppAction icon={<CallIcon/>} label="Call" onClick={this.action2}/>
-            <AppAction icon={<VideoCallIcon/>} label="Video Call" onClick={this.action3}/>
-            <AppAction icon={<StarIcon/>} label="Favorite" onClick={this.action4}/>
+            <AppAction icon={<MessageIcon />} label="Message" onClick={this.handleAction1} />
+            <AppAction icon={<CallIcon />} label="Call" onClick={this.handleAction2} />
+            <AppAction icon={<VideoCallIcon />} label="Video Call" onClick={this.handleAction3} />
+            <AppAction icon={<StarIcon />} label="Favorite" onClick={this.handleAction4} />
           </AppIcon>
         </div>
       </div>
-    )
+    );
   }
 }
+
+SimpleAppIcon.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
 export default withStyles(styleSheet)(SimpleAppIcon);

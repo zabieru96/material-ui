@@ -1,6 +1,3 @@
-/**
- * Created by zabieru on 7/9/2017.
- */
 // @flow
 
 import React from 'react';
@@ -8,7 +5,7 @@ import type { Element } from 'react';
 import classNames from 'classnames';
 import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
-import grey from '../colors/grey'
+import grey from '../colors/grey';
 
 export const styleSheet = createStyleSheet('MuiAppAction', theme => ({
   root: {
@@ -21,9 +18,11 @@ export const styleSheet = createStyleSheet('MuiAppAction', theme => ({
     whiteSpace: 'nowrap',
     alignItems: 'center',
     display: 'flex',
-    margin: '4px auto',
-    boxShadow: theme.shadows[8],
-    cursor: 'pointer'
+    margin: '2px auto',
+    boxShadow: theme.shadows[3],
+    cursor: 'pointer',
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    border: 'none',
   },
   icon: {
     background: grey[300],
@@ -40,14 +39,14 @@ export const styleSheet = createStyleSheet('MuiAppAction', theme => ({
     display: 'flex',
     float: 'right',
     textAlign: 'center',
-    marginLeft: 5
+    marginLeft: 5,
   },
   link: {
     color: 'inherit',
     alignItems: 'center',
     display: 'flex',
-    textDecoration: 'none'
-  }
+    textDecoration: 'none',
+  },
 }));
 
 type DefaultProps = {
@@ -58,35 +57,37 @@ type Props = DefaultProps & {
   /**
    * Useful to extend the style applied to components.
    */
-    classes: Object,
+  classes: Object,
   /**
    * @ignore
    */
-    className?: string,
+  className?: string,
   /**
    * Icon to display for the current action
    */
-    icon: Element<*>,
+  icon: Element<*>,
   /**
    * The URL to link to when the button is clicked.
    * If defined, an `a` element will be used as the root node.
    */
-    href?: string,
+  href?: string,
   /**
    * Label to display for the current action
    */
-    label: string,
+  label: string,
   /**
    * Function called on click of action.
    */
-    onClick?: Function,
+  onClick?: Function,
 };
 
 function AppAction(props: Props) {
   const { classes, icon, label, onClick } = props;
 
-  if(props.href){
-    return(
+  let content;
+
+  if (props.href) {
+    content = (
       <div onClick={onClick} className={classNames(classes.root)}>
         <a href={props.href} className={classNames(classes.link)}>
           <span className={classNames(classes.icon)}>
@@ -97,9 +98,9 @@ function AppAction(props: Props) {
           </span>
         </a>
       </div>
-    )
-  }else{
-    return (
+    );
+  } else {
+    content = (
       <div onClick={onClick} className={classNames(classes.root)}>
         <span className={classNames(classes.icon)}>
           {icon}
@@ -110,6 +111,8 @@ function AppAction(props: Props) {
       </div>
     );
   }
+
+  return content;
 }
 
 AppAction.defaultProps = {
