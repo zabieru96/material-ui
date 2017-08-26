@@ -11,17 +11,39 @@ import Paper from '../Paper';
 import Modal from '../internal/Modal';
 import { duration } from '../styles/transitions';
 import common from '../colors/common';
-import {fade} from '../styles/colorManipulator'
+import { fade } from '../styles/colorManipulator';
 
-export const styleSheet = createStyleSheet('MuiBottomSheet', {
-  root: {
+const increment = 64;
 
+export const styleSheet = createStyleSheet('MuiBottomSheet', theme => ({
+  [theme.breakpoints.up('xs')]: {
+    root: {
+      minWidth: increment * 6,
+      width: 'calc(100% - ' + increment + 'px)',
+    }
+  },
+  [theme.breakpoints.up('md')]: {
+    root: {
+      minWidth: increment * 8,
+      width: 'calc(100% - ' + increment * 2 + 'px)',
+    }
+  },
+  [theme.breakpoints.up('lg')]: {
+    root: {
+      minWidth: increment * 9,
+      width: 'calc(100% - ' + increment * 3 + 'px)',
+    }
+  },
+  center: {
+    margin: '0 auto',
   },
   paper: {
     position: 'fixed',
     bottom: 0,
     left: 0,
     right: 0,
+    maxHeight: 'calc(100% - 64px)',
+    overflowY: 'auto',
   },
   heading: {
     'line-height': '56px',
@@ -33,33 +55,33 @@ export const styleSheet = createStyleSheet('MuiBottomSheet', {
     padding: '0 16px',
     'font-family' : 'Roboto',
   },
-  inset: {
-    width: '800px',
-    margin: '0 auto', /* Will not center vertically and won't work in IE6/7. */
+  noHeading: {
+    height: 8,
+    display: 'block',
   },
   persistent: {
     'z-index' : 1400,
   }
-});
+}));
 
-class BottomSheet extends Component{
-
+class BottomSheet extends Component {
   static defaultProps = {
     enterTransitionDuration: duration.enteringScreen,
     leaveTransitionDuration: duration.leavingScreen,
     open: false,
     modal: false,
+    inset: false,
   };
 
   componentWillMount(){
     this.setState({
-      open: this.props.open
+      open: this.props.open,
     })
-  }
+  };
 
   handleClose = () => {
     this.setState(
-      {open: false}
+      {open: false},
     )
   };
 
@@ -70,13 +92,14 @@ class BottomSheet extends Component{
       enterTransitionDuration,
       leaveTransitionDuration,
       children,
+      inset,
       open,
       heading,
       modal,
-      ...other
+      ...other,
     } = this.props;
 
-    const header = heading? heading : "";
+    const header = heading ? heading : "";
 
     if (modal) {
       return (
@@ -94,15 +117,25 @@ class BottomSheet extends Component{
             <Paper
               elevation={4}
               square
-              className={classNames(classes.paper)}
+              className={classNames({
+                [classes.root]: inset,
+                [classes.center]: inset,
+                [classes.paper]: true,
+              })}
             >
-              <span className={classNames(classes.heading)}>{header}</span>
+              <span className={classNames({
+                [classes.heading]: heading,
+                [classes.noHeading]: !heading,
+              })}
+              >
+                {header}
+              </span>
               {children}
             </Paper>
           </Slide>
         </Modal>
       )
-    }else{
+    } else {
       return (
         <div>
           <Slide
@@ -113,14 +146,24 @@ class BottomSheet extends Component{
           >
             <Paper
               square
-              className={classNames(classes.paper, classes.persistent)}
+              className={classNames(classes.persistent, {
+                [classes.root]: inset,
+                [classes.center]: inset,
+                [classes.paper]: true,
+              })}
             >
-              <span className={classNames(classes.heading)}>{header}</span>
+              <span className={classNames({
+                [classes.heading]: heading,
+                [classes.noHeading]: !heading,
+              })}
+              >
+                {header}
+              </span>
               {children}
             </Paper>
           </Slide>
         </div>
-      )
+      );
     }
   }
 }
@@ -131,12 +174,13 @@ BottomSheet.propTypes = {
    */
   heading: PropTypes.string,
   /**
+   * Used to display a fixed width Bottom Sheet.
+   */
+  inset: PropTypes.bool,
+  /**
    * Toggle to determine the type of bottom sheet. If false and by default displays a persistent bottom sheet.
    */
   modal: PropTypes.bool,
-  /**
-   *
-   */
 };
 
 export default withStyles(styleSheet)(BottomSheet);

@@ -14,13 +14,13 @@ import DraftsIcon from 'material-ui-icons/Drafts';
 import StarIcon from 'material-ui-icons/Star';
 import SendIcon from 'material-ui-icons/Send';
 
-const styleSheet = createStyleSheet('SimpleBottomSheet', {
+const styleSheet = createStyleSheet('InsetBottomSheet', {
   root: {
     width: 500,
   },
 });
 
-class SimpleBottomSheet extends Component {
+class InsetBottomSheet extends Component {
 
   state = {
     persistent: false,
@@ -69,20 +69,21 @@ class SimpleBottomSheet extends Component {
 
     return (
       <div className={classes.root}>
-        <Button onClick={this.togglePersistentSheet}>Toggle Basic BottomSheet</Button>
+        <Button onClick={this.togglePersistentSheet}>Toggle Inset BottomSheet</Button>
         <BottomSheet
-          heading="Basic Sheet"
           open={this.state.persistent}
+          inset
         >
           {options}
         </BottomSheet>
 
-        <Button onClick={this.toggleModalSheet}>Toggle Basic Modal BottomSheet</Button>
+        <Button onClick={this.toggleModalSheet}>Toggle Basic Inset BottomSheet</Button>
         <BottomSheet
           open={this.state.modal}
           onRequestClose={this.toggleModalSheet}
           heading="Modal Sheet"
           modal
+          inset
         >
           {options}
         </BottomSheet>
@@ -91,8 +92,8 @@ class SimpleBottomSheet extends Component {
   }
 }
 
-SimpleBottomSheet.propTypes = {
+InsetBottomSheet.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styleSheet)(SimpleBottomSheet);
+export default withStyles(styleSheet)(InsetBottomSheet);
